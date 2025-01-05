@@ -1,0 +1,73 @@
+db.obiady.insertMany([
+  {
+    "name": "Schabowy z ziemniakami i mizerią",
+    "ingredients": [
+      { "ingredient": "kotlety schabowe", "quantity": "2", "unit": "sztuki" },
+      { "ingredient": "ziemniaki", "quantity": "4", "unit": "sztuki" },
+      { "ingredient": "ogórek zielony", "quantity": "1", "unit": "sztuka" },
+      { "ingredient": "śmietana", "quantity": "3", "unit": "łyżki" },
+      { "ingredient": "sól", "quantity": "-", "unit": "-" },
+      { "ingredient": "pieprz", "quantity": "-", "unit": "-" }
+    ],
+    "instructions": "Ziemniaki obierz, ugotuj w osolonej wodzie (ok. 20 minut).
+Kotlety schabowe rozbij tłuczkiem, posól i popieprz. Obtocz w mące, następnie w rozkłóconym jajku i bułce tartej. Smaż kotlety na rozgrzanym oleju po 3–4 minuty z każdej strony, aż będą złociste. Ogórek pokrój w plasterki, posól i wymieszaj ze śmietaną. Dopraw pieprzem do smaku. Podawaj kotlety z ziemniakami i mizerią.",
+    "meal_type": "obiad",
+    "prep_time": 40,
+    "calories": 720,
+    "isVege": false
+  },
+  {
+    "name": "Pierogi z mięsem",
+    "ingredients": [
+      { "ingredient": "mąka pszenna", "quantity": "2", "unit": "szklanki" },
+      { "ingredient": "jajko", "quantity": "1", "unit": "sztuka" },
+      { "ingredient": "woda", "quantity": "0.5", "unit": "szklanki" },
+      { "ingredient": "sól", "quantity": "-", "unit": "-" },
+      { "ingredient": "ugotowane mięso", "quantity": "300", "unit": "g" },
+      { "ingredient": "cebula", "quantity": "1", "unit": "sztuka" },
+      { "ingredient": "masło", "quantity": "1", "unit": "łyżka" }
+    ],
+    "instructions": "Zagnieć ciasto z mąki, jajka, wody i soli. Odstaw na 15 minut. Mięso zmiel, cebulę zeszklij na maśle i dodaj do mięsa. Dopraw solą i pieprzem. Ciasto rozwałkuj cienko, wykrawaj kółka. Nakładaj farsz i zlepiaj pierogi. Gotuj pierogi w osolonej wodzie przez 5 minut od momentu wypłynięcia. Podawaj z podsmażoną cebulką.",
+    "meal_type": "obiad",
+    "prep_time": 50,
+    "calories": 560,
+    "isVege": false
+  },
+  {
+    "name": "Makaron z pesto z awokado",
+    "ingredients": [
+      { "ingredient": "makaron spaghetti", "quantity": "200", "unit": "g" },
+      { "ingredient": "awokado", "quantity": "1", "unit": "sztuka" },
+      { "ingredient": "czosnek", "quantity": "1", "unit": "ząbek" },
+      { "ingredient": "świeża bazylia", "quantity": "1", "unit": "garść" },
+      { "ingredient": "oliwa z oliwek", "quantity": "2", "unit": "łyżki" },
+      { "ingredient": "sok z cytryny", "quantity": "1", "unit": "łyżka" },
+      { "ingredient": "sól", "quantity": "-", "unit": "-" },
+      { "ingredient": "pieprz", "quantity": "-", "unit": "-" }
+    ],
+    "instructions": "Ugotuj makaron al dente w osolonej wodzie zgodnie z instrukcją na opakowaniu (ok. 8–10 minut). W międzyczasie przekrój awokado na pół, usuń pestkę i wydrąż miąższ. Do blendera wrzuć awokado, obrany ząbek czosnku, bazylię, oliwę z oliwek oraz sok z cytryny. Zmiksuj na gładkie pesto. Dopraw solą i pieprzem do smaku. Gotowe pesto wymieszaj z odcedzonym makaronem. Można udekorować listkami bazylii i skropić dodatkową oliwą.",
+    "meal_type": "obiad",
+    "prep_time": 20,
+    "calories": 540,
+    "isVege": true
+  },
+  {
+    "name": "Curry warzywne z batatami",
+    "ingredients": [
+      { "ingredient": "batat", "quantity": "1", "unit": "sztuka" },
+      { "ingredient": "mleko kokosowe", "quantity": "400", "unit": "ml" },
+      { "ingredient": "marchewka", "quantity": "1", "unit": "sztuka" },
+      { "ingredient": "szpinak", "quantity": "1", "unit": "garść" },
+      { "ingredient": "cebula", "quantity": "1", "unit": "sztuka" },
+      { "ingredient": "czosnek", "quantity": "2", "unit": "ząbki" },
+      { "ingredient": "pasta curry", "quantity": "2", "unit": "łyżeczki" },
+      { "ingredient": "olej kokosowy", "quantity": "1", "unit": "łyżeczka" }
+    ],
+    "instructions": "Przygotowanie: Batata i marchewkę obierz, pokrój w kostkę. Cebulę i czosnek drobno posiekaj. W garnku rozgrzej olej kokosowy, zeszklij cebulę i czosnek. Dodaj pastę curry i mieszaj przez 1 minutę. Dorzuć bataty i marchewkę, podsmażaj przez 3–4 minuty. Wlej mleko kokosowe i gotuj na średnim ogniu przez ok. 15 minut, aż warzywa będą miękkie. Dodaj szpinak, mieszając, aby zmiękł (2–3 minuty). Dopraw solą i pieprzem.
+Podawaj z ryżem basmati lub kaszą.",
+    "meal_type": "obiad",
+    "prep_time": 30,
+    "calories": 610,
+    "isVege": true
+  }
+]);

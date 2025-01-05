@@ -1,0 +1,143 @@
+use("przepisy");
+
+db.przekaski.insertMany([
+  {
+    "name": "Mini kanapki z serem i szynką",
+    "ingredients": [
+      { "ingredient": "chleb pszenny", "quantity": "4", "unit": "kromki" },
+      { "ingredient": "szynka", "quantity": "2", "unit": "plastry" },
+      { "ingredient": "ser żółty", "quantity": "2", "unit": "plastry" },
+      { "ingredient": "masło", "quantity": "-", "unit": "-" }
+    ],
+    "instructions": "Posmaruj chleb masłem, ułóż na każdej kromce plaster szynki i sera. Złóż kanapki i pokrój na mniejsze części.",
+    "meal_type": "przekąski",
+    "prep_time": 10,
+    "calories": 200,
+    "isVege": false
+  },
+  {
+    "name": "Paszteciki z mięsem",
+    "ingredients": [
+      { "ingredient": "ciasto francuskie", "quantity": "1", "unit": "opakowanie" },
+      { "ingredient": "mięso mielone", "quantity": "200", "unit": "g" },
+      { "ingredient": "cebula", "quantity": "1", "unit": "sztuka" },
+      { "ingredient": "jajko", "quantity": "1", "unit": "sztuka" }
+    ],
+    "instructions": "Cebulę podsmaż na oleju, dodaj mięso mielone i smaż do zrumienienia. Rozwałkuj ciasto francuskie, nałóż farsz i zwiń w ruloniki. Posmaruj jajkiem i piecz w 200°C przez 20 minut.",
+    "meal_type": "przekąski",
+    "prep_time": 30,
+    "calories": 150,
+    "isVege": false
+  },
+  {
+    "name": "Tosty z serem i pomidorem",
+    "ingredients": [
+      { "ingredient": "chleb tostowy", "quantity": "2", "unit": "kromki" },
+      { "ingredient": "ser żółty", "quantity": "2", "unit": "plastry" },
+      { "ingredient": "pomidor", "quantity": "1", "unit": "sztuka" },
+      { "ingredient": "masło", "quantity": "1", "unit": "łyżka" }
+    ],
+    "instructions": "Posmaruj chleb masłem, na jednej kromce połóż plaster sera, na drugim plaster pomidora. Złóż tosty i grilluj na patelni przez 3–4 minuty z każdej strony.",
+    "meal_type": "przekąski",
+    "prep_time": 10,
+    "calories": 250,
+    "isVege": false
+  },
+  {
+    "name": "Chipsy ziemniaczane",
+    "ingredients": [
+      { "ingredient": "ziemniaki", "quantity": "4", "unit": "sztuki" },
+      { "ingredient": "oliwa z oliwek", "quantity": "1", "unit": "łyżka" },
+      { "ingredient": "sól", "quantity": "-", "unit": "-" }
+    ],
+    "instructions": "Ziemniaki pokrój na bardzo cienkie plasterki. Skrop oliwą, posyp solą i piecz w piekarniku w 180°C przez 20 minut.",
+    "meal_type": "przekąski",
+    "prep_time": 25,
+    "calories": 150,
+    "isVege": true
+  },
+  {
+    "name": "Śledź w oleju",
+    "ingredients": [
+      { "ingredient": "filety śledziowe w oleju", "quantity": "2", "unit": "sztuki" },
+      { "ingredient": "cebula", "quantity": "1", "unit": "sztuka" },
+      { "ingredient": "ocet", "quantity": "1", "unit": "łyżeczka" }
+    ],
+    "instructions": "Śledzie pokrój na kawałki, cebulę posiekaj w piórka. Wymieszaj składniki, dodaj ocet i odstaw na 10 minut do lodówki.",
+    "meal_type": "przekąski",
+    "prep_time": 10,
+    "calories": 180,
+    "isVege": false
+  },
+  {
+    "name": "Jajka na twardo z majonezem",
+    "ingredients": [
+      { "ingredient": "jajka", "quantity": "4", "unit": "sztuki" },
+      { "ingredient": "majonez", "quantity": "2", "unit": "łyżki" },
+      { "ingredient": "sól", "quantity": "-", "unit": "-" },
+      { "ingredient": "pieprz", "quantity": "-", "unit": "-" }
+    ],
+    "instructions": "Jajka ugotuj na twardo (około 10 minut). Obierz jajka, przekrój na pół i posmaruj majonezem. Dopraw solą i pieprzem.",
+    "meal_type": "przekąski",
+    "prep_time": 15,
+    "calories": 120,
+    "isVege": true
+  },
+  {
+    "name": "Smażony ser",
+    "ingredients": [
+      { "ingredient": "ser typu cheddar lub oscypek", "quantity": "200", "unit": "g" },
+      { "ingredient": "jajko", "quantity": "1", "unit": "sztuka" },
+      { "ingredient": "bułka tarta", "quantity": "2", "unit": "łyżki" }
+    ],
+    "instructions": "Ser pokrój w plastry. Obtocz w jajku, a potem w bułce tartej. Smaż na rozgrzanej patelni przez 2–3 minuty z każdej strony.",
+    "meal_type": "przekąski",
+    "prep_time": 15,
+    "calories": 250,
+    "isVege": false
+  },
+  {
+    "name": "Faworki",
+    "ingredients": [
+      { "ingredient": "mąka", "quantity": "2", "unit": "szklanki" },
+      { "ingredient": "jajka", "quantity": "2", "unit": "sztuki" },
+      { "ingredient": "śmietana", "quantity": "0.25", "unit": "szklanki" },
+      { "ingredient": "cukier", "quantity": "2", "unit": "łyżki" },
+      { "ingredient": "cukier puder", "quantity": "-", "unit": "-" }
+    ],
+    "instructions": "Zagnieć ciasto z mąki, jajek, śmietany i cukru. Rozwałkuj na cienkie paski. Smaż faworki na gorącym oleju przez 2–3 minuty. Posyp cukrem pudrem.",
+    "meal_type": "przekąski",
+    "prep_time": 30,
+    "calories": 100,
+    "isVege": true
+  },
+  {
+    "name": "Mini quiche",
+    "ingredients": [
+      { "ingredient": "ciasto francuskie", "quantity": "1", "unit": "opakowanie" },
+      { "ingredient": "jajka", "quantity": "3", "unit": "sztuki" },
+      { "ingredient": "ser żółty", "quantity": "100", "unit": "g" },
+      { "ingredient": "wędlina", "quantity": "50", "unit": "g" },
+      { "ingredient": "cebula", "quantity": "0.5", "unit": "sztuki" }
+    ],
+    "instructions": "Ciasto wyłóż do foremek na tartaletki. W misce wymieszaj jajka, ser, pokrojoną wędlinę i cebulę. Wlej mieszankę do ciasta i piecz w 180°C przez 20 minut.",
+    "meal_type": "przekąski",
+    "prep_time": 30,
+    "calories": 250,
+    "isVege": false
+  },
+  {
+    "name": "Pita z hummusem i warzywami",
+    "ingredients": [
+      { "ingredient": "pita", "quantity": "1", "unit": "sztuka" },
+      { "ingredient": "hummus", "quantity": "3", "unit": "łyżki" },
+      { "ingredient": "pomidor", "quantity": "1", "unit": "sztuka" },
+      { "ingredient": "sałata", "quantity": "-", "unit": "-" }
+    ],
+    "instructions": "Pita przekrój na pół. Posmaruj hummusem, włóż pokrojone warzywa i sałatę.",
+    "meal_type": "przekąski",
+    "prep_time": 10,
+    "calories": 180,
+    "isVege": true
+  }
+]);
