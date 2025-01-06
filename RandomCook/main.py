@@ -5,9 +5,7 @@ if __name__ == "__main__":
 
 
     # TO - DO:
-# sprawdzania poprawności danych w nowej funkcji 
-# bindy
 # ogarnąć shuffle
 # ogarnąć update 
-# ogarnąć delete
+
 

@@ -369,11 +369,18 @@ class UpdateRecipeWindow():
         print("Aktualizacja!")
 
     
-    def deleteRecipe(self):
-        # fukncja do usuwania niechcianych przepisów
-        DeleteOrNotWindow(self)
+    def showDeleteConfirmWindow(self):
+        # fukncja wyświetla okno z potwierdzeniem usunięcia
+        selectedMealType = db[self.mealOptionsCombobox.get()]
+        selectedRecipeName = self.recipeNamesCombobox.get()
+        DeleteOrNotWindow(self, selectedMealType, selectedRecipeName)
+    
 
-        print("Usuwam !")
+        # DELETE
+    def deleteRecipe(self, selectedMealType, selectedRecipeName): 
+        # funkcja do usuwania receptur z bazy danych
+        selectedMealType.delete_one({"name": selectedRecipeName})
+        self.updateRecipeWindow.destroy()
 
 
     def mealOptionsBind(self, event):
@@ -454,7 +461,7 @@ class UpdateRecipeWindow():
         self.closeButton = ctk.CTkButton(self.helpFrame, text="Wyjdź", command=self.close, corner_radius=50, fg_color='#d12634', hover_color='orange', width=180)
         self.closeButton.grid(row=13, column=1, padx=15, pady=10, sticky='nsew')
 
-        self.deleteButton = ctk.CTkButton(self.updateRecipeWindow, text="", image=myImage, width=40, height=40, command=self.deleteRecipe, corner_radius=50, fg_color='#d12634', hover_color='orange')
+        self.deleteButton = ctk.CTkButton(self.updateRecipeWindow, text="", image=myImage, width=40, height=40, command=self.showDeleteConfirmWindow, corner_radius=50, fg_color='#d12634', hover_color='orange')
         self.deleteButton.place(relx=0.75, rely=0.05)
 
         self.kcalEntry.insert(0, str(calories)) 
@@ -469,12 +476,13 @@ class UpdateRecipeWindow():
     # klasa okna potwierdzenia usunięcia
 
 class DeleteOrNotWindow():
-    def __init__(self, parentWindow):
+    def __init__(self, parentWindow, selectedMealType, selectedRecipeName):
         self.parentWindow = parentWindow
+        self.selectedMealType = selectedMealType
+        self.selectedRecipeName = selectedRecipeName
         self.deleteOrNotWindow = ctk.CTkToplevel()
         self.deleteOrNotWindow.title("Usuwanie przepisu")
         
-        # Rozmiar okna
         width = 300
         height = 120
         screen_width = self.deleteOrNotWindow.winfo_screenwidth()
@@ -487,7 +495,7 @@ class DeleteOrNotWindow():
         self.deleteQuestionLabel = ctk.CTkLabel(self.deleteOrNotWindow, text="Czy napewno chcesz usunąć wybrany przepis?", font=("Helvetica", 12))
         self.deleteQuestionLabel.grid(row=0, column=0, columnspan=2, padx=20, pady=10, sticky='nsew')
 
-        self.confirmDeleteButton = ctk.CTkButton(self.deleteOrNotWindow, text="Potwierdź", command=self.close, corner_radius=50, fg_color='green', hover_color='#49cc49')
+        self.confirmDeleteButton = ctk.CTkButton(self.deleteOrNotWindow, text="Potwierdź", command=self.referenceToDeleteReciep, corner_radius=50, fg_color='green', hover_color='#49cc49')
         self.confirmDeleteButton.grid(row=1, column=0, padx=10, pady=10, sticky='nsew')
 
         self.closeButton = ctk.CTkButton(self.deleteOrNotWindow, text="Anuluj", command=self.close, corner_radius=50, fg_color='#d12634', hover_color='orange')
@@ -495,15 +503,19 @@ class DeleteOrNotWindow():
 
         self.deleteOrNotWindow.grid_columnconfigure(0, weight=1)
         self.deleteOrNotWindow.grid_columnconfigure(1, weight=1)
+
         self.deleteOrNotWindow.grab_set()
         self.deleteOrNotWindow.wait_window(self.deleteOrNotWindow)
+
+
+    def referenceToDeleteReciep(self):
+        self.deleteOrNotWindow.destroy()
+        self.parentWindow.deleteRecipe(self.selectedMealType, self.selectedRecipeName)
 
 
     def close(self):
         self.deleteOrNotWindow.destroy()
 
-
-        
 
 
 
