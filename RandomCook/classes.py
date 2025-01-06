@@ -11,15 +11,16 @@ client = MongoClient('mongodb://localhost:27017/')
 db = client['przepisy'] 
 
 
+# -----------------------------------------------------------------------------------------------------------------------------------------
     # customowy Entrybox który zezwala tylko na podawanie liczby całkowitych
 class CustomEntry(ctk.CTkEntry):
-    def __init__(self, master, **kwargs):  #master=None
+    def __init__(self, master, **kwargs): 
         super().__init__(master, **kwargs)
         self.configure(validate="key")
         self.configure(validatecommand=(self.register(self.validate_input), '%P'))
         
     def validate_input(self, new_text):
-            # Dozwolone są tylko cyfry dla objektów CustomEntry
+            # Sprawdzanie dozwolonych wartości. Dozwolone są tylko cyfry dla objektów CustomEntry
         return re.match(r'^[0-9]*$', new_text) is not None
     
 
@@ -117,9 +118,11 @@ class AddRecipeWindow():
         self.addRecipeWindow.destroy()
 
     def openAddIngredientsWindow(self):
+        # opener okna do dodawania składników
         AddIngredientsWindow(self)
 
     def subtractIngredient(self):
+        # funkcja odejmująca składnik z ingredientsList
         if len(self.ingredientsList) > 0:
             self.ingredientsList.pop()
 
@@ -139,6 +142,7 @@ class AddRecipeWindow():
 
         # CREATE
     def addNewMeal(self,recipeNameEntry, mealCategoryEntry, kcalEntry, prepTimeEntry, czyWegeCheckbox, ingredientsList, recipeEntry):
+        # funkcja dodająca przepis do bazy danych MongoDB
         recipeName = recipeNameEntry.get()
         mealCategory = mealCategoryEntry.get()
         kcal = kcalEntry.get()
@@ -269,6 +273,7 @@ class AddIngredientsWindow():
 
 
     def addToIngredientList(self):
+        # funkcja dodajaca składnik do ingredientsList w celu przekazania listy do funkccji dodającej przepisy do bazy danych w klasie AddRecipeWindow
         ingredientName = self.nameEntry.get()
         
         if ingredientName:
@@ -301,6 +306,7 @@ class AddIngredientsWindow():
             
 
     def clearPlaceholderText(self):
+        # funkcja ustawiająca kolor napisów błędów
         self.nameEntry.configure(placeholder_text="", placeholder_text_color="white")
 
     def showInputNameError(self):
@@ -324,9 +330,38 @@ class AddIngredientsWindow():
 # -----------------------------------------------------------------------------------------------------------------------------------------
     # klasa wywoływana w klasie AddRecipeWindow, wyświetla okno z możliwością dodania składników 
 class UpdateRecipeWindow():
-    def __init__(self):
-        pass
+    def __init__(self, root):
+        self.updateRecipeWindow = ctk.CTkToplevel(root)
+        self.updateRecipeWindow.title("Aktualizacja przepisów")
+        self.updateRecipeWindow.iconbitmap('images/chef.ico')
+        width = 450
+        height = 680
+        screen_width = self.updateRecipeWindow.winfo_screenwidth()
+        screen_height = self.updateRecipeWindow.winfo_screenheight()
+        position_top = int(screen_height / 2 - height / 2) - 50
+        position_left = int(screen_width / 2 - width / 2)
+        self.updateRecipeWindow.geometry(f"{width}x{height}+{position_left}+{position_top}")
+        self.updateRecipeWindow.resizable(False, False)
 
+
+        self.closeButton = ctk.CTkButton(self.updateRecipeWindow, text="Wyjdź", command=self.close, corner_radius=50, fg_color='#d12634', hover_color='orange')
+        self.closeButton.grid()
+
+        self.updateButton = ctk.CTkButton(self.updateRecipeWindow, text="Zatwierdź", command=self.updateRecipe, corner_radius=50, fg_color='green', hover_color='#49cc49', width=50)
+        self.updateButton.grid()
+
+        self.updateRecipeWindow.grab_set()
+        self.updateRecipeWindow.wait_window(self.updateRecipeWindow)
+
+
+    def close(self):
+        # funkcja zamykająca okno updateRecipeWindow
+        self.updateRecipeWindow.destroy()
+
+        # UPDATE
+    def updateRecipe(self): 
+        # updatowanie receptury  
+        print("Updatownie !")
 
 
 

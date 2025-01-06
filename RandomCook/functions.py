@@ -28,9 +28,7 @@ def readMealRecipe():
     pass
 
 
-    # UPDATE
-def updateRecipe():   
-    print("Updatownie !")
+
 
 
     # DELETE

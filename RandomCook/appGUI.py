@@ -37,7 +37,7 @@ def createMainWindow():
     addMealButton = ctk.CTkButton(app,text="Dodaj potrawe", command=lambda: openAddRecipeWindow(app), corner_radius=50, fg_color='green', hover_color='#49cc49')
     addMealButton.place(relx=0.8, rely=0.9, anchor=tk.CENTER)
 
-    updateRecipeButton = ctk.CTkButton(app, text="Zaaktualizuj przepis", command=updateRecipe, corner_radius=50, fg_color="green", hover_color='#49cc49')
+    updateRecipeButton = ctk.CTkButton(app, text="Zaaktualizuj przepis", command=lambda: openUpdateRecipeWindow(app), corner_radius=50, fg_color="green", hover_color='#49cc49')
     updateRecipeButton.place(relx=0.2, rely=0.9, anchor=tk.CENTER)
 
     mainLabel = ctk.CTkLabel(app,text="Nigdy więcej nie myśl co by tu dziś ugotować",height=25, width=25, font=("Helvetica", 20))
@@ -80,8 +80,8 @@ def openAddRecipeWindow(app):
     newWindow = AddRecipeWindow(app)
 
 
-def openUpdateRecipeWindow():
-    newWindow = UpdateRecipeWindow()
+def openUpdateRecipeWindow(app):
+    newWindow = UpdateRecipeWindow(app)
 
 
 
