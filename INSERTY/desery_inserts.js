@@ -356,6 +356,9 @@ db.desery.insertMany([
     createdAt: new Date(),
     updatedAt: new Date()
   },
+]);
+
+db.desery.insertOne(
   {
     _id: 20,
     name: "Wegańskie ciasteczka z rodzynkami",
@@ -375,4 +378,4 @@ db.desery.insertMany([
     createdAt: new Date(),
     updatedAt: new Date()
   }
-]);
+);

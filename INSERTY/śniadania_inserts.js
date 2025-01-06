@@ -17,7 +17,7 @@ db.śniadania.insertMany([
     calories: 400,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 2,
@@ -35,7 +35,7 @@ db.śniadania.insertMany([
     calories: 380,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 3,
@@ -54,7 +54,7 @@ db.śniadania.insertMany([
     calories: 350,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 4,
@@ -74,7 +74,7 @@ db.śniadania.insertMany([
     calories: 430,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 5,
@@ -94,7 +94,7 @@ db.śniadania.insertMany([
     calories: 420,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 6,
@@ -116,7 +116,7 @@ db.śniadania.insertMany([
     calories: 320,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 7,
@@ -136,7 +136,7 @@ db.śniadania.insertMany([
     calories: 599,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 8,
@@ -156,7 +156,7 @@ db.śniadania.insertMany([
     calories: 1585,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 9,
@@ -175,7 +175,7 @@ db.śniadania.insertMany([
     calories: 933,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 10,
@@ -193,7 +193,7 @@ db.śniadania.insertMany([
     calories: 556,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 11,
@@ -213,7 +213,7 @@ db.śniadania.insertMany([
     calories: 644,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 12,
@@ -235,7 +235,7 @@ db.śniadania.insertMany([
     calories: 309,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 13,
@@ -254,7 +254,7 @@ db.śniadania.insertMany([
     calories: 356,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 14,
@@ -275,7 +275,7 @@ db.śniadania.insertMany([
     calories: 1581,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 15,
@@ -295,7 +295,7 @@ db.śniadania.insertMany([
     calories: 650,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 16,
@@ -315,7 +315,7 @@ db.śniadania.insertMany([
     calories: 450,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 17,
@@ -335,7 +335,7 @@ db.śniadania.insertMany([
     calories: 500,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 18,
@@ -355,7 +355,7 @@ db.śniadania.insertMany([
     calories: 450,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 19,
@@ -374,7 +374,7 @@ db.śniadania.insertMany([
     calories: 480,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 20,
@@ -393,6 +393,6 @@ db.śniadania.insertMany([
     calories: 370,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   }
 ]);

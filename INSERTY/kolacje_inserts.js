@@ -388,6 +388,9 @@ db.kolacje.insertMany([
     createdAt: new Date(),
     updatedAt: new Date()
   },
+]);
+
+db.kolacje.insertOne(
   {
     _id: 20,
     name: "Ryż z warzywami na patelni",
@@ -407,4 +410,4 @@ db.kolacje.insertMany([
     createdAt: new Date(),
     updatedAt: new Date()
   }
-]);
+);

@@ -19,7 +19,7 @@ db.obiady.insertMany([
     calories: 720,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 2,
@@ -40,7 +40,7 @@ db.obiady.insertMany([
     calories: 560,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 3,
@@ -62,7 +62,7 @@ db.obiady.insertMany([
     calories: 540,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 4,
@@ -84,7 +84,7 @@ db.obiady.insertMany([
     calories: 610,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 5,
@@ -107,7 +107,7 @@ db.obiady.insertMany([
     calories: 390,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 6,
@@ -131,7 +131,7 @@ db.obiady.insertMany([
     calories: 640,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 7,
@@ -153,7 +153,7 @@ db.obiady.insertMany([
     calories: 580,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 8,
@@ -176,7 +176,7 @@ db.obiady.insertMany([
     calories: 450,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 9,
@@ -199,7 +199,7 @@ db.obiady.insertMany([
     calories: 450,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 10,
@@ -220,7 +220,7 @@ db.obiady.insertMany([
     calories: 700,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 11,
@@ -241,7 +241,7 @@ db.obiady.insertMany([
     calories: 420,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 12,
@@ -263,7 +263,7 @@ db.obiady.insertMany([
     calories: 590,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 13,
@@ -286,7 +286,7 @@ db.obiady.insertMany([
     calories: 540,
     isVege: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 14,
@@ -309,7 +309,7 @@ db.obiady.insertMany([
     calories: 380,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 15,
@@ -329,7 +329,7 @@ db.obiady.insertMany([
     calories: 520,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 16,
@@ -351,7 +351,7 @@ db.obiady.insertMany([
     calories: 480,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 17,
@@ -374,7 +374,7 @@ db.obiady.insertMany([
     calories: 470,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 18,
@@ -398,7 +398,7 @@ db.obiady.insertMany([
     calories: 420,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   {
     _id: 19,
@@ -418,8 +418,12 @@ db.obiady.insertMany([
     calories: 320,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
+]);
+
+
+db.obiady.insertOne(
   {
     _id: 20,
     name: "Gulasz z bakłażana i pomidorów",
@@ -440,6 +444,6 @@ db.obiady.insertMany([
     calories: 320,
     isVege: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   }
-]);
+);

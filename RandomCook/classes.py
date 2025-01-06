@@ -1,8 +1,14 @@
 import tkinter as tk
 import customtkinter as ctk
 from functions import *
+from pymongo import MongoClient
 import re
 import time
+
+
+    # Globalne połączenie z bazą danych MongoDB na localhost
+client = MongoClient('mongodb://localhost:27017/')
+db = client['przepisy'] 
 
 
     # customowy Entrybox który zezwala tylko na podawanie liczby całkowitych
@@ -47,7 +53,7 @@ class AddRecipeWindow():
         mealOptions = ["śniadania", "obiady", "kolacje", "przekąski", "desery"]
 
             # -------------------------------- addRecipeWindow COMPONENTS --------------------------------------
-        self.addMealButton = ctk.CTkButton(self.addRecipeWindow, text="Dodaj przepis", command=lambda: addNewMeal(self.recipeNameEntry, self.mealCategoryCombobox, self.kcalEntry, self.prepTimeEntry, self.czyWegeCheckbox, self.ingredientsList, self.recipeEntry), corner_radius=50, fg_color='green', hover_color='#49cc49')
+        self.addMealButton = ctk.CTkButton(self.addRecipeWindow, text="Dodaj przepis", command=lambda: self.addNewMeal(self.recipeNameEntry, self.mealCategoryCombobox, self.kcalEntry, self.prepTimeEntry, self.czyWegeCheckbox, self.ingredientsList, self.recipeEntry), corner_radius=50, fg_color='green', hover_color='#49cc49')
         self.addMealButton.grid(row=13, column=0, padx=20, pady=10, sticky='nsew')
 
         self.closeButton = ctk.CTkButton(self.addRecipeWindow, text="Wyjdź", command=self.close, corner_radius=50, fg_color='#d12634', hover_color='orange')
@@ -92,7 +98,7 @@ class AddRecipeWindow():
         self.subtractIngredientsButton = ctk.CTkButton(self.helpFrame, text="-", command=self.subtractIngredient, corner_radius=100, fg_color='#d12634', hover_color='orange', width=40, font=("Helvetica", 18)) 
         self.subtractIngredientsButton.grid(row=9, column=1, padx=10, pady=2, sticky='w')
 
-        self.ingredientsEntry = ctk.CTkTextbox(self.addRecipeWindow, width=420, height=100)   # state="disable"
+        self.ingredientsEntry = ctk.CTkTextbox(self.addRecipeWindow, width=420, height=100)  # state="disable"
         self.ingredientsEntry.grid(row=10, column=0, columnspan=2, padx=10, pady=2, sticky='w')
 
         self.recipeLabel = ctk.CTkLabel(self.addRecipeWindow, text="Przygotowanie *", font=("Helvetica", 14))
@@ -101,7 +107,7 @@ class AddRecipeWindow():
         self.recipeEntry = ctk.CTkTextbox(self.addRecipeWindow, width=420, height=150)
         self.recipeEntry.grid(row=12, column=0, columnspan=2, padx=10, pady=2, sticky='w')
 
-        self.addRecipeWindow.bind('<Return>', lambda event: addNewMeal(self.recipeNameEntry, self.mealCategoryCombobox, self.kcalEntry, self.prepTimeEntry, self.czyWegeCheckbox, self.ingredientsEntry, self.recipeEntry))
+        self.addRecipeWindow.bind('<Return>', lambda event: self.addNewMeal(self.recipeNameEntry, self.mealCategoryCombobox, self.kcalEntry, self.prepTimeEntry, self.czyWegeCheckbox, self.ingredientsList, self.recipeEntry))
 
         self.addRecipeWindow.grab_set()
         self.addRecipeWindow.wait_window(self.addRecipeWindow)
@@ -129,7 +135,87 @@ class AddRecipeWindow():
                 self.ingredientsEntry.delete("1.0", ctk.END) 
                 self.ingredientsEntry.insert("1.0", updated_content)  
 
-    
+
+
+        # CREATE
+    def addNewMeal(self,recipeNameEntry, mealCategoryEntry, kcalEntry, prepTimeEntry, czyWegeCheckbox, ingredientsList, recipeEntry):
+        recipeName = recipeNameEntry.get()
+        mealCategory = mealCategoryEntry.get()
+        kcal = kcalEntry.get()
+        prepTime = prepTimeEntry.get()
+        isVege = czyWegeCheckbox.get()
+        recipe = recipeEntry.get("1.0", "end-1c") 
+
+        if any(x == "" for x in [kcal, prepTime]):
+            kcal = ""
+            prepTimeEntry = ""
+        else:
+            kcal = int(kcalEntry.get())
+            prepTime = int(prepTimeEntry.get())
+
+        if any(field == "" for field in [recipeName, mealCategory, kcal, prepTime, isVege, recipe]) or len(ingredientsList) < 2:
+            messagebox.showerror("Error", "Nie poddano wszytkich wymaganych wartości - Każde pole musi być podane")
+            if len(ingredientsList) < 2:
+                messagebox.showerror("Error", "Wymagane podanie co najminiej dwóch składników !")
+        elif kcal <= 100 or prepTime <= 1:
+            if kcal <= 100:
+                messagebox.showerror("Error", "Wartości kalori musi być większa niż 100")
+            else:
+                messagebox.showerror("Error", "Czas przygotowanie nie może być mniejszy niż 1 minuta")
+        else:
+            ingredientsObjects = []
+
+            for i in range(len(ingredientsList)):
+                ingredient = {}
+                ingredient.update({"name": ingredientsList[i][0]})
+
+                if len(ingredientsList[i]) == 1:
+                    pass
+                elif len(ingredientsList[i]) == 2:
+                    if isinstance(ingredientsList[i][1], int):
+                        ingredient.update({"quantity": ingredientsList[i][1]})
+
+                    elif isinstance(ingredientsList[i][1], str):
+                        ingredient.update({"unit": ingredientsList[i][1]})
+                else: 
+                    ingredient.update({"quantity": ingredientsList[i][1], "unit": ingredientsList[i][2]})
+                
+                ingredientsObjects.append(ingredient)
+
+            collectionName = db[mealCategory] 
+            # currentID = collectionName.count_documents({}) + 1
+
+            queryID = [x for x in collectionName.find({},{"_id":1}).sort({"_id":-1}).limit(1)]
+            currentID = queryID[0].get("_id") + 1
+
+            dokument = {
+                "_id": currentID,
+                "name": recipeName,
+                "ingredients": ingredientsObjects,
+                "instructions": recipe,
+                "meal_type": mealCategory,
+                "prep_time": prepTime,
+                "calories": kcal,
+                "isVege": bool(isVege),
+                "createdAt": datetime.now(),
+                "updatedAt": datetime.now(),
+            }
+
+            collectionName.insert_one(dokument)
+            self.close()
+
+                # Sprawdzenie zmiennych
+            # print("Nazwa przepisu:", recipeName)
+            # print("Kategoria przepisu:", mealCategory)
+            # print("Ilość kalori:", kcal)
+            # print("Czas przygotowania:", prepTime)
+            # print("Czy vege: ", isVege)
+            # print("Przygotowanie:", recipe)
+            # print(ingredientsObjects)
+            # print(dokument)
+            # print(currentID)
+
+
 
 # -----------------------------------------------------------------------------------------------------------------------------------------
     # klasa wyświetlająca okno z zawartością wylosowanej receptury

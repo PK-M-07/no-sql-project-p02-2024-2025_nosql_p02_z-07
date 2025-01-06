@@ -146,10 +146,10 @@ db.createCollection("obiady", {
           type: "boolean",
         },
         createdAt: {
-          type: "timestamp",
+          bsonType: "date",
         },
         updatedAt: {
-          type: "timestamp",
+          bsonType: "date",
         }
       },
     },
@@ -225,10 +225,10 @@ db.createCollection("kolacje", {
           type: "boolean",
         },
         createdAt: {
-          type: "timestamp",
+          bsonType: "date",
         },
         updatedAt: {
-          type: "timestamp",
+          bsonType: "date",
         }
       },
     },
@@ -304,10 +304,10 @@ db.createCollection("przekaski", {
           type: "boolean",
         },
         createdAt: {
-          type: "timestamp",
+          bsonType: "date",
         },
         updatedAt: {
-          type: "timestamp",
+          bsonType: "date",
         }
       },
     },
@@ -383,10 +383,10 @@ db.createCollection("desery", {
           type: "boolean",
         },
         createdAt: {
-          type: "timestamp",
+          bsonType: "date",
         },
         updatedAt: {
-          type: "timestamp",
+          bsonType: "date",
         }
       },
     },

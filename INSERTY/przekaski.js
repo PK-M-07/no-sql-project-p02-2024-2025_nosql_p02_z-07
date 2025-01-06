@@ -343,6 +343,9 @@ db.przekaski.insertMany([
     createdAt: new Date(),
     updatedAt: new Date()
   },
+]);
+
+db.przekaski.insertOne(
   {
     _id: 20,
     name: "Pita z hummusem i warzywami",
@@ -361,4 +364,4 @@ db.przekaski.insertMany([
     createdAt: new Date(),
     updatedAt: new Date()
   }
-]);
+);
