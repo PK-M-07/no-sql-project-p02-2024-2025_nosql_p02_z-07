@@ -31,7 +31,7 @@ def createMainWindow():
     czyPrzekaski = tk.BooleanVar()
 
                             # -------------- COMPONENTS -----------------
-    shaffleButton = ctk.CTkButton(app, text="Losuj dania", command=lambda: shuffleMealPlan(naIleDniCombobox,czyWegeCheckbox, czyPrzekaskiChecbox, czyDeseryCheckbox), corner_radius=50, fg_color='green', hover_color='#49cc49')
+    shaffleButton = ctk.CTkButton(app, text="Losuj dania", command=lambda: shuffleMealPlan(app, mainFrame, naIleDniCombobox,czyWegeCheckbox, czyPrzekaskiChecbox, czyDeseryCheckbox), corner_radius=50, fg_color='green', hover_color='#49cc49')
     shaffleButton.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
 
     addMealButton = ctk.CTkButton(app,text="Dodaj potrawe", command=lambda: openAddRecipeWindow(app), corner_radius=50, fg_color='green', hover_color='#49cc49')
@@ -63,7 +63,7 @@ def createMainWindow():
 
     mainFrame = ctk.CTkFrame(app, width=800, height=700) # fg_color=
     mainFrame.pack(pady=160)
-    mainFrame.bind("<Button-1>", lambda event: showRecipe(app))
+    mainFrame.bind("<Button-1>", lambda event: showRecipe(app, mainFrame))
     
             # pobranie wartości z checkboxów 
     # naIleDniComoboxVal = naIleDniCombobox.get()
@@ -83,6 +83,43 @@ def openAddRecipeWindow(app):
 def openUpdateRecipeWindow(app):
     newWindow = UpdateRecipeWindow(app)
 
+
+   
+def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzekaskiChecbox, czyDeseryCheckbox):
+    # funcja losująca na każdy wybrany dzień posiłki według kategorii
+    iloscDniDiety = naIleDniCombobox.get()
+    isVege = czyWegeCheckbox.get()
+    czyPrzekaski = czyPrzekaskiChecbox.get()
+    czyDesery = czyDeseryCheckbox.get()
+
+    if iloscDniDiety == "":
+        messagebox.showerror("Error", "Należy podać na ile dni rozpisać diete")
+    else:
+        # print(iloscDniDiety)
+        # print(czyPrzekaski)
+        # print(isVege)
+        # print(czyDesery)
+
+        texts_frame1 = ["Napis 1 w ramce 1", "Napis 2 w ramce 1"]
+        texts_frame2 = ["Napis 1 w ramce 2", "Napis 2 w ramce 2"]
+        texts_frame3 = ["Napis 1 w ramce 3", "Napis 2 w ramce 3"]
+
+            # Liczba ramek
+        num_frames = int(naIleDniCombobox.get())
+        
+        # Dodajemy ramki do grid i ustawiamy je, aby były równej szerokości
+        for i, texts in enumerate([texts_frame1, texts_frame2, texts_frame3]):
+            frame = RecipeFrame(mainFrame, text_list=texts)
+            
+            # Ustawiamy każdą ramkę w jednej kolumnie, ale różnym wierszu
+            frame.grid(row=0, column=i, sticky="nsew")
+        
+        # Ustawiamy, aby kolumny miały równą szerokość
+        for i in range(num_frames):
+            mainFrame.grid_columnconfigure(i, weight=1)
+
+        # Ustawiamy, aby wiersz miał równą wysokość
+        mainFrame.grid_rowconfigure(0, weight=1)
 
 
 

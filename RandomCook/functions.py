@@ -10,14 +10,6 @@ import random
 
 
 
-def showRecipe(app):
-    # ta funkcja chyba jako metoda powinna być wywoływana na obiektach typu FrameWithRecipe które pokazują zawartość receptury
-    new_window = Toplevel(app)  
-    new_window.title("Nowe okno")  
-    new_window.geometry("500x650")
-
-    label = tk.Label(new_window, text="To jest nowe okno!")
-    label.pack(pady=20)
 
 
 
@@ -28,7 +20,14 @@ def readMealRecipe():
     pass
 
 
+def showRecipe(app, mainFrame):
+    # ta funkcja chyba jako metoda powinna być wywoływana na obiektach typu FrameWithRecipe które pokazują zawartość receptury
+    new_window = Toplevel(app)  
+    new_window.title("Nowe okno")  
+    new_window.geometry("500x650")
 
+    label = tk.Label(new_window, text="To jest nowe okno!")
+    label.pack(pady=20)
 
 
     # DELETE
@@ -36,21 +35,7 @@ def deleteCurrentMeal():
     pass
 
 
-    # funcja losująca na każdy wybrany dzień posiłki według kategorii
-def shuffleMealPlan(naIleDniCombobox, czyWegeCheckbox, czyPrzekaskiChecbox, czyDeseryCheckbox):
-    iloscDniDiety = naIleDniCombobox.get()
-    isVege = czyWegeCheckbox.get()
-    czyPrzekaski = czyPrzekaskiChecbox.get()
-    czyDesery = czyDeseryCheckbox.get()
-
-    if iloscDniDiety == "":
-        #czyDeseryCheckbox.configure(fg_color="red")
-        messagebox.showerror("Error", "Należy podać na ile dni rozpisać diete")
-    else:
-        print(iloscDniDiety)
-        print(czyPrzekaski)
-        print(isVege)
-        print(czyDesery)
+ 
         
 
     

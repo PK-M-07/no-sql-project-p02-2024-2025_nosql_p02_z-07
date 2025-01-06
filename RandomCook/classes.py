@@ -2,6 +2,7 @@ import tkinter as tk
 import customtkinter as ctk
 from functions import *
 from pymongo import MongoClient
+from PIL import Image
 import re
 import time
 
@@ -335,7 +336,7 @@ class UpdateRecipeWindow():
         self.updateRecipeWindow.title("Aktualizacja przepisów")
         self.updateRecipeWindow.iconbitmap('images/chef.ico')
         width = 450
-        height = 680
+        height = 700
         screen_width = self.updateRecipeWindow.winfo_screenwidth()
         screen_height = self.updateRecipeWindow.winfo_screenheight()
         position_top = int(screen_height / 2 - height / 2) - 50
@@ -343,12 +344,16 @@ class UpdateRecipeWindow():
         self.updateRecipeWindow.geometry(f"{width}x{height}+{position_left}+{position_top}")
         self.updateRecipeWindow.resizable(False, False)
 
+        mealOptions = ["śniadania", "obiady", "kolacje", "przekąski", "desery"]
+        self.recipeNames = []
 
-        self.closeButton = ctk.CTkButton(self.updateRecipeWindow, text="Wyjdź", command=self.close, corner_radius=50, fg_color='#d12634', hover_color='orange')
-        self.closeButton.grid()
+        self.mealOptionLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Kategoria przepisu", font=("Helvetica", 14))
+        self.mealOptionLabel.grid(row=0, column=0, padx=10, pady=4, sticky='w')
 
-        self.updateButton = ctk.CTkButton(self.updateRecipeWindow, text="Zatwierdź", command=self.updateRecipe, corner_radius=50, fg_color='green', hover_color='#49cc49', width=50)
-        self.updateButton.grid()
+        self.mealOptionsCombobox = ctk.CTkComboBox(self.updateRecipeWindow, values=mealOptions, width=170, height=35, font=("Arial", 16), state="readonly")
+        self.mealOptionsCombobox.grid(row=1, column=0, padx=10, pady=2, sticky='w')
+
+        self.mealOptionsCombobox.configure(command=self.mealOptionsBind)
 
         self.updateRecipeWindow.grab_set()
         self.updateRecipeWindow.wait_window(self.updateRecipeWindow)
@@ -358,16 +363,162 @@ class UpdateRecipeWindow():
         # funkcja zamykająca okno updateRecipeWindow
         self.updateRecipeWindow.destroy()
 
-        # UPDATE
+
     def updateRecipe(self): 
-        # updatowanie receptury  
-        print("Updatownie !")
+        # Updatowanie receptury  
+        print("Aktualizacja!")
+
+    
+    def deleteRecipe(self):
+        # fukncja do usuwania niechcianych przepisów
+        DeleteOrNotWindow(self)
+
+        print("Usuwam !")
+
+
+    def mealOptionsBind(self, event):
+        # funkcja która jest wywoływana po wyborze opcji z mealOptionsCombobox
+        selectedMealType = db[self.mealOptionsCombobox.get()]
+
+        list = [x for x in selectedMealType.find({},{"_id":0,"name":1})]
+        self.recipeNames = [x.get("name") for x in list]
+
+        self.recieNameLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Nazwa przepisu", font=("Helvetica", 14))
+        self.recieNameLabel.grid(row=2, column=0, padx=10, pady=2, sticky='w')
+
+        self.recipeNamesCombobox = ctk.CTkComboBox(self.updateRecipeWindow, values=self.recipeNames, width=300, height=35, font=("Arial", 14), state="readonly")
+        self.recipeNamesCombobox.grid(row=3, column=0, padx=10, pady=2, sticky='w')
+        self.recipeNamesCombobox.configure(command=lambda event: self.recipeOptionsBind(event, selectedMealType))
+        # print(f"Wybrano posiłek: {self.recipeNames}")  # sprawdzenie wartości recipeNames
+
+
+    def recipeOptionsBind(self, event, selectedMealType):
+        # funckja oczekujaca na wartość z recipeNameComboboxa
+        myImage = ctk.CTkImage(light_image=Image.open("images/trashBin.png"), size=(30, 30))
+        
+        selectedRecipeName = self.recipeNamesCombobox.get()
+
+        prepTime = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "prep_time": 1}).get("prep_time")
+        calories = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "calories": 1}).get("calories")
+        isVege = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "isVege": 1}).get("isVege")
+        instructions = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "instructions": 1}).get("instructions")
+        ingredientsList = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "ingredients": 1}).get("ingredients")
+
+        ingredients = ""
+
+        for i in range(len(ingredientsList)):
+            if len(ingredientsList[i]) == 3:
+                ingredients += f'Składnik: {ingredientsList[i].get("name")}, ilość: {ingredientsList[i].get("quantity")} {ingredientsList[i].get("unit")}\n'
+            elif len(ingredientsList[i]) == 2:
+                if ingredientsList[i].get("qunatity"):
+                    ingredients += f'Składnik: {ingredientsList[i].get("name")}, ilość: {ingredientsList[i].get("quantity")}\n'
+                else:
+                    ingredients += f'Składnik: {ingredientsList[i].get("name")} {ingredientsList[i].get("unit")}\n'
+            else: 
+                ingredients += f'Składnik: {ingredientsList[i].get("name")}\n'
+
+
+        self.kcalLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Ilość kalori", font=("Helvetica", 14))
+        self.kcalLabel.grid(row=4, column=0, padx=10, pady=2, sticky='w')
+
+        self.kcalEntry = CustomEntry(self.updateRecipeWindow, placeholder_text="Podaj ilość kalori dla posiłku", width=200, height=30)
+        self.kcalEntry.grid(row=5, column=0, padx=10, pady=2, sticky='w')
+ 
+        self.prepTimeLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Czas przygotowania [min]", font=("Helvetica", 14))
+        self.prepTimeLabel.grid(row=6, column=0, padx=10, pady=2, sticky='w')
+
+        self.prepTimeEntry = CustomEntry(self.updateRecipeWindow, placeholder_text="Podaj czas przygotowania", width=200, height=30)
+        self.prepTimeEntry.grid(row=7, column=0, padx=10, pady=2, sticky='w')
+        
+        self.czyWegeCheckbox = ctk.CTkCheckBox(self.updateRecipeWindow, text="Czy wege", width=100, height=35)  
+        self.czyWegeCheckbox.grid(row=8, column=0, padx=10, pady=5, sticky='w')
+
+        self.ingredientsLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Lista składników", font=("Helvetica", 14))
+        self.ingredientsLabel.grid(row=9, column=0, padx=10, pady=2, sticky='w')
+
+        self.ingredientsEntry = ctk.CTkTextbox(self.updateRecipeWindow, width=420, height=100)  
+        self.ingredientsEntry.grid(row=10, column=0, columnspan=2, padx=10, pady=2, sticky='w')
+
+        self.recipeLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Przygotowanie", font=("Helvetica", 14))
+        self.recipeLabel.grid(row=11, column=0, padx=10, pady=2, sticky='w')
+
+        self.recipeEntry = ctk.CTkTextbox(self.updateRecipeWindow, width=420, height=150)
+        self.recipeEntry.grid(row=12, column=0, columnspan=2, padx=10, pady=2, sticky='w')
+
+        self.helpFrame = ctk.CTkFrame(self.updateRecipeWindow, fg_color="#242424")
+        self.helpFrame.grid(row=13, column=0, padx=10, pady=2, sticky='w')
+
+        self.updateButton = ctk.CTkButton(self.helpFrame, text="Zmień", command=self.updateRecipe, corner_radius=50, fg_color='green', hover_color='#49cc49', width=180)
+        self.updateButton.grid(row=13, column=0, padx=20, pady=10, sticky='nsew')
+
+        self.closeButton = ctk.CTkButton(self.helpFrame, text="Wyjdź", command=self.close, corner_radius=50, fg_color='#d12634', hover_color='orange', width=180)
+        self.closeButton.grid(row=13, column=1, padx=15, pady=10, sticky='nsew')
+
+        self.deleteButton = ctk.CTkButton(self.updateRecipeWindow, text="", image=myImage, width=40, height=40, command=self.deleteRecipe, corner_radius=50, fg_color='#d12634', hover_color='orange')
+        self.deleteButton.place(relx=0.75, rely=0.05)
+
+        self.kcalEntry.insert(0, str(calories)) 
+        self.prepTimeEntry.insert(0, str(prepTime))  
+        self.czyWegeCheckbox.select() if isVege else self.czyWegeCheckbox.deselect()  
+        self.ingredientsEntry.insert("1.0", ingredients)  
+        self.recipeEntry.insert("1.0", instructions)
+
+
+
+# -----------------------------------------------------------------------------------------------------------------------------------------
+    # klasa okna potwierdzenia usunięcia
+
+class DeleteOrNotWindow():
+    def __init__(self, parentWindow):
+        self.parentWindow = parentWindow
+        self.deleteOrNotWindow = ctk.CTkToplevel()
+        self.deleteOrNotWindow.title("Usuwanie przepisu")
+        
+        # Rozmiar okna
+        width = 300
+        height = 120
+        screen_width = self.deleteOrNotWindow.winfo_screenwidth()
+        screen_height = self.deleteOrNotWindow.winfo_screenheight()
+        position_top = int(screen_height / 2 - height / 2) - 50
+        position_left = int(screen_width / 2 - width / 2)
+        self.deleteOrNotWindow.geometry(f"{width}x{height}+{position_left}+{position_top}")
+        self.deleteOrNotWindow.resizable(False, False)
+    
+        self.deleteQuestionLabel = ctk.CTkLabel(self.deleteOrNotWindow, text="Czy napewno chcesz usunąć wybrany przepis?", font=("Helvetica", 12))
+        self.deleteQuestionLabel.grid(row=0, column=0, columnspan=2, padx=20, pady=10, sticky='nsew')
+
+        self.confirmDeleteButton = ctk.CTkButton(self.deleteOrNotWindow, text="Potwierdź", command=self.close, corner_radius=50, fg_color='green', hover_color='#49cc49')
+        self.confirmDeleteButton.grid(row=1, column=0, padx=10, pady=10, sticky='nsew')
+
+        self.closeButton = ctk.CTkButton(self.deleteOrNotWindow, text="Anuluj", command=self.close, corner_radius=50, fg_color='#d12634', hover_color='orange')
+        self.closeButton.grid(row=1, column=1, padx=10, pady=10, sticky='nsew')
+
+        self.deleteOrNotWindow.grid_columnconfigure(0, weight=1)
+        self.deleteOrNotWindow.grid_columnconfigure(1, weight=1)
+        self.deleteOrNotWindow.grab_set()
+        self.deleteOrNotWindow.wait_window(self.deleteOrNotWindow)
+
+
+    def close(self):
+        self.deleteOrNotWindow.destroy()
+
+
+        
 
 
 
 # -----------------------------------------------------------------------------------------------------------------------------------------
     # klasa tworząca frame z przepisem
+class RecipeFrame(ctk.CTkFrame):
+    def __init__(self, master, text_list, **kwargs):
+        super().__init__(master, **kwargs)
 
+        # Tworzenie etykiet w ramce
+        for idx, text in enumerate(text_list):
+            label = ctk.CTkLabel(self, text=text)
+            label.grid(row=idx, column=0, padx=10, pady=5, sticky="w")
+        
+        
 
 
     
