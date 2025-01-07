@@ -375,28 +375,46 @@ class UpdateRecipeWindow():
         instructions = self.instructionsEntry.get("1.0", "end-1c") 
         ingredients = self.ingredientsEntry.get("1.0", "end-1c") 
 
-        print(selectedMealType)
-        print(selectedRecipeName)
-        print(prepTime)
-        print(calories)
-        print(isVege)
-        print(instructions)
-        print(ingredients)
+        ingredientsObjects = []
+
+        for i in ingredients.splitlines():
+            dictt = {}
+            parts = i.split("  ")
+            dictt.update({"name": i.split("  ")[0]})
+
+            if len(parts) > 1:
+                try:
+                    dictt.update({"quantity": int(parts[1])})
+                    if len(parts) > 2:
+                        dictt.update({"unit": parts[2]})
+                except ValueError:
+                    dictt.update({"unit": parts[1]})
+
+            ingredientsObjects.append(dictt)
+    
+        # print(ingredientsObjects)
+        # print(selectedMealType)
+        # print(selectedRecipeName)
+        # print(prepTime)
+        # print(calories)
+        # print(isVege)
+        # print(instructions)
+        # print(ingredients)
 
 
             # wykoanie update
-        # selectedMealType.update_one(
-        #     {"name": selectedRecipeName},
-        #     {
-        #         "$set": {
-        #             "prep_time": prepTime,
-        #             "calories": calories,
-        #             "isVege": bool(isVege),
-        #             "instructions": instructions,
-        #             "ingredients": ingredientsObjects
-        #         }
-        #     }
-        # )
+        selectedMealType.update_one(
+            {"name": selectedRecipeName},
+            {
+                "$set": {
+                    "ingredients": ingredientsObjects,
+                    "instructions": instructions,
+                    "prep_time": int(prepTime),
+                    "calories": int(calories),
+                    "isVege": bool(isVege)
+                }
+            }
+        )
 
 
     def showDeleteConfirmWindow(self):
