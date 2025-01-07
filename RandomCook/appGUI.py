@@ -93,35 +93,61 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
     czyPrzekaski = czyPrzekaskiChecbox.get()
     czyDesery = czyDeseryCheckbox.get()
 
-   
-
 
     if iloscDniDiety == "":
         messagebox.showerror("Error", "Należy podać na ile dni rozpisać diete")
     else:
-        # print(iloscDniDiety)
-        # print(czyPrzekaski)
-        # print(isVege)
-        # print(czyDesery)
+        AllSnidaniaID = [x.get("_id") for x in db.śniadania.find({},{"_id":1}).sort({"_id":1})]
+        wylosowanieSniadaniaID = random.sample(AllSnidaniaID, k=int(iloscDniDiety))
 
-        snidaniaID = [x.get("_id") for x in db.śniadania.find({},{"_id":1}).sort({"_id":1})]
-        obiadyID = [x.get("_id") for x in db.obiady.find({},{"_id":1}).sort({"_id":1})]
-        kolacjeID = [x.get("_id") for x in db.kolacje.find({},{"_id":1}).sort({"_id":1})]
+        AllObiadyID = [x.get("_id") for x in db.obiady.find({},{"_id":1}).sort({"_id":1})]
+        wylosowanieObiadyID = random.sample(AllObiadyID, k=int(iloscDniDiety))
+
+        AllKolacjeID = [x.get("_id") for x in db.kolacje.find({},{"_id":1}).sort({"_id":1})]
+        wylosowanieKolacjeID = random.sample(AllKolacjeID, k=int(iloscDniDiety))
 
         wylosowanieSniadania = []
         wylosowanieObiady = []
         wylosowanieKolacje = []
 
-        if czyPrzekaski == 1:
-            przekaskiID = [x.get("_id") for x in db.przekąski.find({},{"_id":1}).sort({"_id":1})]
+        for i in range(int(iloscDniDiety)):
+            tekstS = [x for x in db.śniadania.find({"_id":wylosowanieSniadaniaID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
+            przepisS = f'{tekst[0]["name"]}\n{tekst[0]["ingredients"]}\n{tekst[0]["instructions"]}\n{tekst[0]["prep_time"]}\n{tekst[0]["calories"]}\n{tekst[0]["isVege"]}'
+            
+            tekstO = [x for x in db.śniadania.find({"_id":wylosowanieObiadyID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
+            przepisO = f'{tekst[0]["name"]}\n{tekst[0]["ingredients"]}\n{tekst[0]["instructions"]}\n{tekst[0]["prep_time"]}\n{tekst[0]["calories"]}\n{tekst[0]["isVege"]}'
+
+            tekstK = [x for x in db.śniadania.find({"_id":wylosowanieKolacjeID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
+            przepisK = f'{tekst[0]["name"]}\n{tekst[0]["ingredients"]}\n{tekst[0]["instructions"]}\n{tekst[0]["prep_time"]}\n{tekst[0]["calories"]}\n{tekst[0]["isVege"]}'
+            
+            wylosowanieSniadania.append(przepisS)
+            wylosowanieObiady.append(przepisO)
+            wylosowanieKolacje.append(przepisK)
+
+
+        if czyPrzekaski == True:
+            AllPrzekaskiID = [x.get("_id") for x in db.przekąski.find({},{"_id":1}).sort({"_id":1})]
+            wylosowaniePrzekaskiID = random.sample(AllPrzekaskiID, k=int(iloscDniDiety))
             wylosowaniePrzekaski = []
-        
-        if czyDesery == 1:
-            deseryID = [x.get("_id") for x in db.desery.find({},{"_id":1}).sort({"_id":1})]
+
+            for i in range(int(iloscDniDiety)):
+                tekst = [x for x in db.przekąski.find({"_id":i+wylosowaniePrzekaskiID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
+                przepis = f'{tekst[0]["name"]}\n{tekst[0]["ingredients"]}\n{tekst[0]["instructions"]}\n{tekst[0]["prep_time"]}\n{tekst[0]["calories"]}\n{tekst[0]["isVege"]}'
+                wylosowaniePrzekaski.append(przepis)
+            
+
+        if czyDesery == True:
+            AllDeseryID = [x.get("_id") for x in db.desery.find({},{"_id":1}).sort({"_id":1})]
+            wylosowanieDeseryID = random.sample(AllDeseryID, k=int(iloscDniDiety))
             wylosowanieDesery = []
 
+            for i in range(int(iloscDniDiety)):
+                tekst = [x for x in db.desery.find({"_id":wylosowanieDeseryID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
+                przepis = f'{tekst[0]["name"]}\n{tekst[0]["ingredients"]}\n{tekst[0]["instructions"]}\n{tekst[0]["prep_time"]}\n{tekst[0]["calories"]}\n{tekst[0]["isVege"]}'
+                wylosowanieDesery.append(przepis)
+
         
-        
+
         
         
         
