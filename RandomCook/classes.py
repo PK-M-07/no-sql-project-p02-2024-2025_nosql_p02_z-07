@@ -365,10 +365,40 @@ class UpdateRecipeWindow():
 
 
     def updateRecipe(self): 
-        # Updatowanie receptury  
-        print("Aktualizacja!")
+        # funkcja wkonująca update wybranej receptury
 
-    
+        selectedMealType = db[self.mealOptionsCombobox.get()]
+        selectedRecipeName = self.recipeNamesCombobox.get()
+        prepTime = self.prepTimeEntry.get()
+        calories = self.kcalEntry.get()
+        isVege = self.czyWegeCheckbox.get()
+        instructions = self.instructionsEntry.get("1.0", "end-1c") 
+        ingredients = self.ingredientsEntry.get("1.0", "end-1c") 
+
+        print(selectedMealType)
+        print(selectedRecipeName)
+        print(prepTime)
+        print(calories)
+        print(isVege)
+        print(instructions)
+        print(ingredients)
+
+
+            # wykoanie update
+        # selectedMealType.update_one(
+        #     {"name": selectedRecipeName},
+        #     {
+        #         "$set": {
+        #             "prep_time": prepTime,
+        #             "calories": calories,
+        #             "isVege": bool(isVege),
+        #             "instructions": instructions,
+        #             "ingredients": ingredientsObjects
+        #         }
+        #     }
+        # )
+
+
     def showDeleteConfirmWindow(self):
         # fukncja wyświetla okno z potwierdzeniem usunięcia
         selectedMealType = db[self.mealOptionsCombobox.get()]
@@ -415,14 +445,14 @@ class UpdateRecipeWindow():
 
         for i in range(len(ingredientsList)):
             if len(ingredientsList[i]) == 3:
-                ingredients += f'Składnik: {ingredientsList[i].get("name")}, ilość: {ingredientsList[i].get("quantity")} {ingredientsList[i].get("unit")}\n'
+                ingredients += f'{ingredientsList[i].get("name")}  {ingredientsList[i].get("quantity")}  {ingredientsList[i].get("unit")}\n'
             elif len(ingredientsList[i]) == 2:
                 if ingredientsList[i].get("qunatity"):
-                    ingredients += f'Składnik: {ingredientsList[i].get("name")}, ilość: {ingredientsList[i].get("quantity")}\n'
+                    ingredients += f'{ingredientsList[i].get("name")}  {ingredientsList[i].get("quantity")}\n'
                 else:
-                    ingredients += f'Składnik: {ingredientsList[i].get("name")} {ingredientsList[i].get("unit")}\n'
+                    ingredients += f'{ingredientsList[i].get("name")}  {ingredientsList[i].get("unit")}\n'
             else: 
-                ingredients += f'Składnik: {ingredientsList[i].get("name")}\n'
+                ingredients += f'{ingredientsList[i].get("name")}\n'
 
 
         self.kcalLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Ilość kalori", font=("Helvetica", 14))
@@ -446,11 +476,11 @@ class UpdateRecipeWindow():
         self.ingredientsEntry = ctk.CTkTextbox(self.updateRecipeWindow, width=420, height=100)  
         self.ingredientsEntry.grid(row=10, column=0, columnspan=2, padx=10, pady=2, sticky='w')
 
-        self.recipeLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Przygotowanie", font=("Helvetica", 14))
-        self.recipeLabel.grid(row=11, column=0, padx=10, pady=2, sticky='w')
+        self.instructionsLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Przygotowanie", font=("Helvetica", 14))
+        self.instructionsLabel.grid(row=11, column=0, padx=10, pady=2, sticky='w')
 
-        self.recipeEntry = ctk.CTkTextbox(self.updateRecipeWindow, width=420, height=150)
-        self.recipeEntry.grid(row=12, column=0, columnspan=2, padx=10, pady=2, sticky='w')
+        self.instructionsEntry = ctk.CTkTextbox(self.updateRecipeWindow, width=420, height=150)
+        self.instructionsEntry.grid(row=12, column=0, columnspan=2, padx=10, pady=2, sticky='w')
 
         self.helpFrame = ctk.CTkFrame(self.updateRecipeWindow, fg_color="#242424")
         self.helpFrame.grid(row=13, column=0, padx=10, pady=2, sticky='w')
@@ -468,7 +498,7 @@ class UpdateRecipeWindow():
         self.prepTimeEntry.insert(0, str(prepTime))  
         self.czyWegeCheckbox.select() if isVege else self.czyWegeCheckbox.deselect()  
         self.ingredientsEntry.insert("1.0", ingredients)  
-        self.recipeEntry.insert("1.0", instructions)
+        self.instructionsEntry.insert("1.0", instructions)
 
 
 

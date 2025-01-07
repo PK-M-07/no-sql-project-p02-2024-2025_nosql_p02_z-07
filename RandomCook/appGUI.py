@@ -30,6 +30,7 @@ def createMainWindow():
     isVege = tk.BooleanVar()
     czyPrzekaski = tk.BooleanVar()
 
+
                             # -------------- COMPONENTS -----------------
     shaffleButton = ctk.CTkButton(app, text="Losuj dania", command=lambda: shuffleMealPlan(app, mainFrame, naIleDniCombobox,czyWegeCheckbox, czyPrzekaskiChecbox, czyDeseryCheckbox), corner_radius=50, fg_color='green', hover_color='#49cc49')
     shaffleButton.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
@@ -61,7 +62,7 @@ def createMainWindow():
     czyDeseryCheckbox = ctk.CTkCheckBox(app, text="Czy desery", width=100, height=35) 
     czyDeseryCheckbox.place(relx=0.8, rely=0.19)
 
-    mainFrame = ctk.CTkFrame(app, width=800, height=700) # fg_color=
+    mainFrame = ctk.CTkFrame(app, width=800, height=700)
     mainFrame.pack(pady=160)
     mainFrame.bind("<Button-1>", lambda event: showRecipe(app, mainFrame))
     

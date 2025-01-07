@@ -30,9 +30,6 @@ def showRecipe(app, mainFrame):
     label.pack(pady=20)
 
 
-    # DELETE
-def deleteCurrentMeal():  
-    pass
 
 
  
