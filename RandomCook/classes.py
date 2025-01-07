@@ -364,6 +364,7 @@ class UpdateRecipeWindow():
         self.updateRecipeWindow.destroy()
 
 
+        # UPDATE
     def updateRecipe(self): 
         # funkcja wkonująca update wybranej receptury
 
@@ -411,7 +412,8 @@ class UpdateRecipeWindow():
                     "instructions": instructions,
                     "prep_time": int(prepTime),
                     "calories": int(calories),
-                    "isVege": bool(isVege)
+                    "isVege": bool(isVege),
+                    "updatedAt": datetime.now()
                 }
             }
         )

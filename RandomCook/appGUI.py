@@ -93,6 +93,9 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
     czyPrzekaski = czyPrzekaskiChecbox.get()
     czyDesery = czyDeseryCheckbox.get()
 
+   
+
+
     if iloscDniDiety == "":
         messagebox.showerror("Error", "Należy podać na ile dni rozpisać diete")
     else:
@@ -101,9 +104,40 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
         # print(isVege)
         # print(czyDesery)
 
+        snidaniaID = [x.get("_id") for x in db.śniadania.find({},{"_id":1}).sort({"_id":1})]
+        obiadyID = [x.get("_id") for x in db.obiady.find({},{"_id":1}).sort({"_id":1})]
+        kolacjeID = [x.get("_id") for x in db.kolacje.find({},{"_id":1}).sort({"_id":1})]
+
+        wylosowanieSniadania = []
+        wylosowanieObiady = []
+        wylosowanieKolacje = []
+
+        if czyPrzekaski == 1:
+            przekaskiID = [x.get("_id") for x in db.przekąski.find({},{"_id":1}).sort({"_id":1})]
+            wylosowaniePrzekaski = []
+        
+        if czyDesery == 1:
+            deseryID = [x.get("_id") for x in db.desery.find({},{"_id":1}).sort({"_id":1})]
+            wylosowanieDesery = []
+
+        
+        
+        
+        
+        
+        
+        
+        
+        tekst = [x for x in db.desery.find_one({"_id":1}, {"_id": 0, "createdAt":0, "updatedAt":0})]
+        przepis = f'{tekst[0]["name"]}\n{tekst[0]["ingredients"]}\n{tekst[0]["instructions"]}\n{tekst[0]["prep_time"]}\n{tekst[0]["calories"]}\n{tekst[0]["isVege"]}'
+        print(przepis)
+
         texts_frame1 = ["Napis 1 w ramce 1", "Napis 2 w ramce 1"]
         texts_frame2 = ["Napis 1 w ramce 2", "Napis 2 w ramce 2"]
         texts_frame3 = ["Napis 1 w ramce 3", "Napis 2 w ramce 3"]
+
+
+
 
             # Liczba ramek
         num_frames = int(naIleDniCombobox.get())
