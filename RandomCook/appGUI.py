@@ -91,6 +91,27 @@ def clearMainFrame(app, mainFrame):
         for widget in mainFrame.winfo_children():
             widget.destroy()
 
+
+def extractIngredientsPretty(tekst):
+    # funkcja do ładnego przedstawienia składników w frame w oknie głównym
+    składniki = ""
+    for i in range(len(tekst[0]["ingredients"])):
+        składniki += f'{tekst[0]["ingredients"][i]["name"]} '
+
+        if len(tekst[0]["ingredients"][i]) > 1:
+            try:
+                składniki += f'{tekst[0]["ingredients"][i]["quantity"]} '
+                if len(tekst[0]["ingredients"][i]) > 2:
+                    składniki += f'{tekst[0]["ingredients"][i]["unit"]}\n'
+                else:
+                    składniki += "\n"
+            except (ValueError, KeyError) as e:
+                składniki += f'{tekst[0]["ingredients"][i]["unit"]}\n'
+        else:
+            składniki += "\n"
+
+    return składniki
+
    
 def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzekaskiChecbox, czyDeseryCheckbox):
     # funcja losująca na każdy wybrany dzień posiłki według kategorii
@@ -100,30 +121,29 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
     czyDesery = bool(czyDeseryCheckbox.get())
 
 
-
     if iloscDniDiety == "":
         messagebox.showerror("Error", "Należy podać na ile dni rozpisać diete")
     else:
         clearMainFrame(app, mainFrame)
 
         if czyWege == True:
-            AllSnidaniaID = [x.get("_id") for x in db.śniadania.find({"isVege": True},{"_id":1}).sort({"_id":1})]
+            AllSnidaniaID = [x.get("_id") for x in db.śniadania.find({"isVege": bool(True)},{"_id":1}).sort({"_id":1})]
             wylosowaneSniadaniaID = random.sample(AllSnidaniaID, k=int(iloscDniDiety))
 
-            AllObiadyID = [x.get("_id") for x in db.obiady.find({"isVege": True},{"_id":1}).sort({"_id":1})]
+            AllObiadyID = [x.get("_id") for x in db.obiady.find({"isVege": bool(True)},{"_id":1}).sort({"_id":1})]
             wylosowaneObiadyID = random.sample(AllObiadyID, k=int(iloscDniDiety))
 
-            AllKolacjeID = [x.get("_id") for x in db.kolacje.find({"isVege": True},{"_id":1}).sort({"_id":1})]
+            AllKolacjeID = [x.get("_id") for x in db.kolacje.find({"isVege": bool(True)},{"_id":1}).sort({"_id":1})]
             wylosowaneKolacjeID = random.sample(AllKolacjeID, k=int(iloscDniDiety))
 
         else:
-            AllSnidaniaID = [x.get("_id") for x in db.śniadania.find({"isVege": False},{"_id":1}).sort({"_id":1})]
+            AllSnidaniaID = [x.get("_id") for x in db.śniadania.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
             wylosowaneSniadaniaID = random.sample(AllSnidaniaID, k=int(iloscDniDiety))
 
-            AllObiadyID = [x.get("_id") for x in db.obiady.find({"isVege": False},{"_id":1}).sort({"_id":1})]
+            AllObiadyID = [x.get("_id") for x in db.obiady.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
             wylosowaneObiadyID = random.sample(AllObiadyID, k=int(iloscDniDiety))
 
-            AllKolacjeID = [x.get("_id") for x in db.kolacje.find({"isVege": False},{"_id":1}).sort({"_id":1})]
+            AllKolacjeID = [x.get("_id") for x in db.kolacje.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
             wylosowaneKolacjeID = random.sample(AllKolacjeID, k=int(iloscDniDiety))
 
 
@@ -134,13 +154,13 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
 
         for i in range(int(iloscDniDiety)):
             tekstS = [x for x in db.śniadania.find({"_id": wylosowaneSniadaniaID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
-            przepisS = f'{tekstS[0]["name"]}\n\nSkładniki:\n{tekstS[0]["ingredients"]}\nSposób wykonania: {tekstS[0]["instructions"]}\nCzas przygotowania: {tekstS[0]["prep_time"]} minut\nIlość Kalori: {tekstS[0]["calories"]} kcal\nCzy Wegetariańskie: {tekstS[0]["isVege"]}\n'
+            przepisS = f'{tekstS[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekstS)}\n\nWykonanie:\n{tekstS[0]["instructions"]}\n\nCzas przygotowania:\n{tekstS[0]["prep_time"]} minut\nIlość Kalori:\n{tekstS[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekstS[0]["isVege"]}\n_________________________'
 
-            tekstO = [x for x in db.śniadania.find({"_id": wylosowaneObiadyID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
-            przepisO = f'{tekstO[0]["name"]}\n\nSkładniki:\n{tekstO[0]["ingredients"]}\nSposób wykonania: {tekstO[0]["instructions"]}\nCzas przygotowania: {tekstO[0]["prep_time"]} minut\nIlość Kalori: {tekstO[0]["calories"]} kcal\nCzy Wegetariańskie: {tekstO[0]["isVege"]}\n'
+            tekstO = [x for x in db.obiady.find({"_id": wylosowaneObiadyID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
+            przepisO = f'{tekstO[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekstO)}\n\nWykonanie:\n{tekstO[0]["instructions"]}\n\nCzas przygotowania:\n{tekstO[0]["prep_time"]} minut\nIlość Kalori:\n{tekstO[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekstO[0]["isVege"]}\n_________________________'
 
-            tekstK = [x for x in db.śniadania.find({"_id": wylosowaneKolacjeID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
-            przepisK = f'{tekstK[0]["name"]}\n\nSkładniki:\n{tekstK[0]["ingredients"]}\nSposób wykonania: {tekstK[0]["instructions"]}\nCzas przygotowania: {tekstK[0]["prep_time"]} minut\nIlość Kalori: {tekstK[0]["calories"]} kcal\nCzy Wegetariańskie: {tekstK[0]["isVege"]}\n'
+            tekstK = [x for x in db.kolacje.find({"_id": wylosowaneKolacjeID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
+            przepisK = f'{tekstK[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekstK)}\n\nWykonanie:\n{tekstK[0]["instructions"]}\n\nCzas przygotowania:\n{tekstK[0]["prep_time"]} minut\nIlość Kalori:\n{tekstK[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekstK[0]["isVege"]}\n_________________________'
 
             wylosowaneSniadania.append(przepisS)
             wylosowaneObiady.append(przepisO)
@@ -149,31 +169,33 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
 
         if czyPrzekaski == True:
             if czyWege == True:
-                AllPrzekaskiID = [x.get("_id") for x in db.przekąski.find({"isVege": True},{"_id":1}).sort({"_id":1})]
+                AllPrzekaskiID = [x.get("_id") for x in db.przekąski.find({"isVege": bool(True)},{"_id":1}).sort({"_id":1})]
             else:
-                AllPrzekaskiID = [x.get("_id") for x in db.przekąski.find({"isVege": False},{"_id":1}).sort({"_id":1})]
+                AllPrzekaskiID = [x.get("_id") for x in db.przekąski.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
 
             wylosowanePrzekaskiID = random.sample(AllPrzekaskiID, k=int(iloscDniDiety))
             wylosowanePrzekaski = []
 
             for i in range(int(iloscDniDiety)):
                 tekst = [x for x in db.przekąski.find({"_id": wylosowanePrzekaskiID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
-                przepis = f'{tekst[0]["name"]}\n\nSkładniki:\n{tekst[0]["ingredients"]}\nSposób wykonania: {tekst[0]["instructions"]}\nCzas przygotowania: {tekst[0]["prep_time"]} minut\nIlość Kalori: {tekst[0]["calories"]} kcal\nCzy Wegetariańskie: {tekst[0]["isVege"]}\n'
+                przepis = f'{tekst[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekst)}\n\nWykonanie:\n{tekst[0]["instructions"]}\n\nCzas przygotowania:\n{tekst[0]["prep_time"]} minut\nIlość Kalori:\n{tekst[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekst[0]["isVege"]}\n_________________________'
+
                 wylosowanePrzekaski.append(przepis)
             
 
         if czyDesery == True:
             if czyWege == True:
-                AllDeseryID = [x.get("_id") for x in db.desery.find({"isVege": True},{"_id":1}).sort({"_id":1})]
+                AllDeseryID = [x.get("_id") for x in db.desery.find({"isVege": bool(True)},{"_id":1}).sort({"_id":1})]
             else:
-                AllDeseryID = [x.get("_id") for x in db.desery.find({"isVege": False},{"_id":1}).sort({"_id":1})]
+                AllDeseryID = [x.get("_id") for x in db.desery.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
             
             wylosowaneDeseryID = random.sample(AllDeseryID, k=int(iloscDniDiety))
             wylosowaneDesery = []
 
             for i in range(int(iloscDniDiety)):
                 tekst = [x for x in db.desery.find({"_id": wylosowaneDeseryID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
-                przepis = f'{tekst[0]["name"]}\n\nSkładniki:\n{tekst[0]["ingredients"]}\nSposób wykonania: {tekst[0]["instructions"]}\nCzas przygotowania: {tekst[0]["prep_time"]} minut\nIlość Kalori: {tekst[0]["calories"]} kcal\nCzy Wegetariańskie: {tekst[0]["isVege"]}\n'
+                przepis = f'{tekst[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekst)}\n\nWykonanie:\n{tekst[0]["instructions"]}\n\nCzas przygotowania:\n{tekst[0]["prep_time"]} minut\nIlość Kalori:\n{tekst[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekst[0]["isVege"]}\n_________________________'
+
                 wylosowaneDesery.append(przepis)
 
 
