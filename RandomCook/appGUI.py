@@ -62,8 +62,8 @@ def createMainWindow():
     czyDeseryCheckbox = ctk.CTkCheckBox(app, text="Czy desery", width=100, height=35) 
     czyDeseryCheckbox.place(relx=0.8, rely=0.19)
 
-    mainFrame = ctk.CTkFrame(app, width=800, height=700)
-    mainFrame.pack(pady=160)
+    mainFrame = ctk.CTkScrollableFrame(app, width=800, height=320, orientation="horizontal")
+    mainFrame.place(relx=0.5, rely=0.55, anchor=tk.CENTER) 
     mainFrame.bind("<Button-1>", lambda event: showRecipe(app, mainFrame))
     
             # pobranie wartości z checkboxów 
@@ -89,9 +89,10 @@ def openUpdateRecipeWindow(app):
 def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzekaskiChecbox, czyDeseryCheckbox):
     # funcja losująca na każdy wybrany dzień posiłki według kategorii
     iloscDniDiety = naIleDniCombobox.get()
-    czyWege = czyWegeCheckbox.get()
+    czyWege = bool(czyWegeCheckbox.get())
     czyPrzekaski = czyPrzekaskiChecbox.get()
     czyDesery = czyDeseryCheckbox.get()
+
 
 
     if iloscDniDiety == "":
@@ -118,20 +119,19 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
             wylosowaneKolacjeID = random.sample(AllKolacjeID, k=int(iloscDniDiety))
 
 
-
         wylosowaneSniadania = []
         wylosowaneObiady = []
         wylosowaneKolacje = []
 
 
         for i in range(int(iloscDniDiety)):
-            tekstS = [x for x in db.śniadania.find({"_id":wylosowaneSniadaniaID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
+            tekstS = [x for x in db.śniadania.find({"_id": wylosowaneSniadaniaID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
             przepisS = f'{tekstS[0]["name"]}\n{tekstS[0]["ingredients"]}\n{tekstS[0]["instructions"]}\n{tekstS[0]["prep_time"]}\n{tekstS[0]["calories"]}\n{tekstS[0]["isVege"]}'
             
-            tekstO = [x for x in db.śniadania.find({"_id":wylosowaneObiadyID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
+            tekstO = [x for x in db.śniadania.find({"_id": wylosowaneObiadyID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
             przepisO = f'{tekstO[0]["name"]}\n{tekstO[0]["ingredients"]}\n{tekstO[0]["instructions"]}\n{tekstO[0]["prep_time"]}\n{tekstO[0]["calories"]}\n{tekstO[0]["isVege"]}'
 
-            tekstK = [x for x in db.śniadania.find({"_id":wylosowaneKolacjeID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
+            tekstK = [x for x in db.śniadania.find({"_id": wylosowaneKolacjeID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
             przepisK = f'{tekstK[0]["name"]}\n{tekstK[0]["ingredients"]}\n{tekstK[0]["instructions"]}\n{tekstK[0]["prep_time"]}\n{tekstK[0]["calories"]}\n{tekstK[0]["isVege"]}'
             
             wylosowaneSniadania.append(przepisS)
@@ -149,7 +149,7 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
             wylosowanePrzekaski = []
 
             for i in range(int(iloscDniDiety)):
-                tekst = [x for x in db.przekąski.find({"_id":wylosowanePrzekaskiID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
+                tekst = [x for x in db.przekąski.find({"_id": wylosowanePrzekaskiID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
                 przepis = f'{tekst[0]["name"]}\n{tekst[0]["ingredients"]}\n{tekst[0]["instructions"]}\n{tekst[0]["prep_time"]}\n{tekst[0]["calories"]}\n{tekst[0]["isVege"]}'
                 wylosowanePrzekaski.append(przepis)
             
@@ -164,36 +164,40 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
             wylosowaneDesery = []
 
             for i in range(int(iloscDniDiety)):
-                tekst = [x for x in db.desery.find({"_id":wylosowaneDeseryID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
+                tekst = [x for x in db.desery.find({"_id": wylosowaneDeseryID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
                 przepis = f'{tekst[0]["name"]}\n{tekst[0]["ingredients"]}\n{tekst[0]["instructions"]}\n{tekst[0]["prep_time"]}\n{tekst[0]["calories"]}\n{tekst[0]["isVege"]}'
                 wylosowaneDesery.append(przepis)
 
-        
 
-    
+        for i in range(int(iloscDniDiety)):
+            texts_frame1 = [wylosowaneSniadania[i], wylosowaneObiady[i], wylosowaneKolacje[i]]
 
-        texts_frame1 = ["Napis 1 w ramce 1", "Napis 2 w ramce 1"]
+            if wylosowaneDesery:
+                texts_frame1.append(wylosowaneDesery[i])
+
+            if wylosowanePrzekaski:
+                texts_frame1.append(wylosowanePrzekaski[i])
+            
+            
+
+        texts_frame1 = [wylosowaneSniadania[0], wylosowaneObiady[0], wylosowaneKolacje[0]]
         texts_frame2 = ["Napis 1 w ramce 2", "Napis 2 w ramce 2"]
         texts_frame3 = ["Napis 1 w ramce 3", "Napis 2 w ramce 3"]
 
 
 
 
-            # Liczba ramek
         num_frames = int(naIleDniCombobox.get())
         
-        # Dodajemy ramki do grid i ustawiamy je, aby były równej szerokości
+       
         for i, texts in enumerate([texts_frame1, texts_frame2, texts_frame3]):
-            frame = RecipeFrame(mainFrame, text_list=texts)
+            frame = RecipeFrame(mainFrame, text_list=texts, )
             
-            # Ustawiamy każdą ramkę w jednej kolumnie, ale różnym wierszu
             frame.grid(row=0, column=i, sticky="nsew")
         
-        # Ustawiamy, aby kolumny miały równą szerokość
         for i in range(num_frames):
             mainFrame.grid_columnconfigure(i, weight=1)
 
-        # Ustawiamy, aby wiersz miał równą wysokość
         mainFrame.grid_rowconfigure(0, weight=1)
 
 

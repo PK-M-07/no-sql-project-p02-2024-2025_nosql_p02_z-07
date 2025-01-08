@@ -418,6 +418,8 @@ class UpdateRecipeWindow():
             }
         )
 
+        self.close()
+
 
     def showDeleteConfirmWindow(self):
         # fukncja wyświetla okno z potwierdzeniem usunięcia
@@ -571,7 +573,7 @@ class DeleteOrNotWindow():
 
 # -----------------------------------------------------------------------------------------------------------------------------------------
     # klasa tworząca frame z przepisem
-class RecipeFrame(ctk.CTkFrame):
+class RecipeFrame(ctk.CTkScrollableFrame):
     def __init__(self, master, text_list, **kwargs):
         super().__init__(master, **kwargs)
 
