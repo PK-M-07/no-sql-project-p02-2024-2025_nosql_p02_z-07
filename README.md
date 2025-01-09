@@ -4,4 +4,4 @@ Za pomocą interfejsu graficznego aplikacja umożliwia wylosowanie przepisów na
 Technologie użyte w aplikacji:
   MongoDB -> baza danych / 
   Python -> mechanika aplikacji / 
-  Python customtkiner -> interfejs graficzny
+  Python customtkinter -> interfejs graficzny
