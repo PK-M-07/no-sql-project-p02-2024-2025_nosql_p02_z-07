@@ -21,7 +21,7 @@ class CustomEntry(ctk.CTkEntry):
         self.configure(validatecommand=(self.register(self.validate_input), '%P'))
         
     def validate_input(self, new_text):
-            # Sprawdzanie dozwolonych wartości. Dozwolone są tylko cyfry dla objektów CustomEntry
+        # Sprawdzanie dozwolonych wartości. Dozwolone są tylko cyfry dla objektów CustomEntry
         return re.match(r'^[0-9]*$', new_text) is not None
     
 
@@ -100,7 +100,7 @@ class AddRecipeWindow():
         self.subtractIngredientsButton = ctk.CTkButton(self.helpFrame, text="-", command=self.subtractIngredient, corner_radius=100, fg_color='#d12634', hover_color='orange', width=40, font=("Helvetica", 18)) 
         self.subtractIngredientsButton.grid(row=9, column=1, padx=10, pady=2, sticky='w')
 
-        self.ingredientsEntry = ctk.CTkTextbox(self.addRecipeWindow, width=420, height=100)  # state="disable"
+        self.ingredientsEntry = ctk.CTkTextbox(self.addRecipeWindow, width=420, height=100, state="disabled")  # state="disable"
         self.ingredientsEntry.grid(row=10, column=0, columnspan=2, padx=10, pady=2, sticky='w')
 
         self.recipeLabel = ctk.CTkLabel(self.addRecipeWindow, text="Przygotowanie *", font=("Helvetica", 14))
@@ -136,8 +136,10 @@ class AddRecipeWindow():
                 if updated_content != "":
                     updated_content += "\n"
 
+                self.ingredientsEntry.configure(state="normal")
                 self.ingredientsEntry.delete("1.0", ctk.END) 
                 self.ingredientsEntry.insert("1.0", updated_content)  
+                self.ingredientsEntry.configure(state="disabled")
 
 
 
@@ -220,15 +222,6 @@ class AddRecipeWindow():
             # print(currentID)
 
 
-
-# -----------------------------------------------------------------------------------------------------------------------------------------
-    # klasa wyświetlająca okno z zawartością wylosowanej receptury
-class ShowRecipe():
-    pass
-
-
-
-
 # -----------------------------------------------------------------------------------------------------------------------------------------
     # klasa wywoływana w klasie AddRecipeWindow, wyświetla okno z możliwością dodania składników 
 class AddIngredientsWindow():
@@ -293,7 +286,9 @@ class AddIngredientsWindow():
                     ingredientText += f" jednostka: {ingredientUnit}"
 
                 self.parentWindow.ingredientsList.append(ingredient)
+                self.parentWindow.ingredientsEntry.configure(state="normal")
                 self.parentWindow.ingredientsEntry.insert(ctk.END, ingredientText + "\n")
+                self.parentWindow.ingredientsEntry.configure(state="disabled")
                 self.nameEntry.delete(0, ctk.END)
                 self.quantityEntry.delete(0, ctk.END)
                 self.unitEntry.delete(0, ctk.END)
@@ -372,8 +367,8 @@ class UpdateRecipeWindow():
         prepTime = self.prepTimeEntry.get()
         calories = self.kcalEntry.get()
         isVege = self.czyWegeCheckbox.get()
-        instructions = self.instructionsEntry.get("1.0", "end-1c") 
-        ingredients = self.ingredientsEntry.get("1.0", "end-1c") 
+        instructions = self.instructionsEntry.get("1.0", "end-1c")
+        ingredients = self.ingredientsEntry.get("1.0", "end-1c")
 
         ingredientsObjects = []
 
@@ -434,6 +429,11 @@ class UpdateRecipeWindow():
         self.updateRecipeWindow.destroy()
 
 
+    def openAddIngredientsWindowForUpdate(self):
+        # opener okna do dodawania składników
+        AddIngredientsWindow(self)
+
+
     def mealOptionsBind(self, event):
         # funkcja która jest wywoływana po wyborze opcji z mealOptionsCombobox
         selectedMealType = db[self.mealOptionsCombobox.get()]
@@ -444,7 +444,7 @@ class UpdateRecipeWindow():
         self.recieNameLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Nazwa przepisu", font=("Helvetica", 14))
         self.recieNameLabel.grid(row=2, column=0, padx=10, pady=2, sticky='w')
 
-        self.recipeNamesCombobox = ctk.CTkComboBox(self.updateRecipeWindow, values=self.recipeNames, width=300, height=35, font=("Arial", 14), state="readonly")
+        self.recipeNamesCombobox = ctk.CTkComboBox(self.updateRecipeWindow, values=self.recipeNames, width=270, height=35, font=("Arial", 14), state="readonly")
         self.recipeNamesCombobox.grid(row=3, column=0, padx=10, pady=2, sticky='w')
         self.recipeNamesCombobox.configure(command=lambda event: self.recipeOptionsBind(event, selectedMealType))
         # print(f"Wybrano posiłek: {self.recipeNames}")  # sprawdzenie wartości recipeNames
@@ -494,7 +494,13 @@ class UpdateRecipeWindow():
         self.ingredientsLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Lista składników", font=("Helvetica", 14))
         self.ingredientsLabel.grid(row=9, column=0, padx=10, pady=2, sticky='w')
 
-        self.ingredientsEntry = ctk.CTkTextbox(self.updateRecipeWindow, width=420, height=100)  
+        self.addIngredientsButton = ctk.CTkButton(self.updateRecipeWindow, text="+", command=self.openAddIngredientsWindowForUpdate, corner_radius=100, fg_color='green', hover_color='#49cc49', width=40, font=("Helvetica", 18)) 
+        self.addIngredientsButton.place(relx=0.6, rely=0.46)
+
+        self.subtractIngredientsButton = ctk.CTkButton(self.updateRecipeWindow, text="-", corner_radius=100, fg_color='#d12634', hover_color='orange', width=40, font=("Helvetica", 18)) 
+        self.subtractIngredientsButton.place(relx=0.75, rely=0.46)
+
+        self.ingredientsEntry = ctk.CTkTextbox(self.updateRecipeWindow, width=420, height=100, state="disabled")  
         self.ingredientsEntry.grid(row=10, column=0, columnspan=2, padx=10, pady=2, sticky='w')
 
         self.instructionsLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Przygotowanie", font=("Helvetica", 14))
@@ -518,14 +524,15 @@ class UpdateRecipeWindow():
         self.kcalEntry.insert(0, str(calories)) 
         self.prepTimeEntry.insert(0, str(prepTime))  
         self.czyWegeCheckbox.select() if isVege else self.czyWegeCheckbox.deselect()  
-        self.ingredientsEntry.insert("1.0", ingredients)  
+        self.ingredientsEntry.configure(state="normal")
+        self.ingredientsEntry.insert("1.0", ingredients)
+        self.ingredientsEntry.configure(state="disabled")
         self.instructionsEntry.insert("1.0", instructions)
 
 
 
 # -----------------------------------------------------------------------------------------------------------------------------------------
     # klasa okna potwierdzenia usunięcia
-
 class DeleteOrNotWindow():
     def __init__(self, parentWindow, selectedMealType, selectedRecipeName):
         self.parentWindow = parentWindow
