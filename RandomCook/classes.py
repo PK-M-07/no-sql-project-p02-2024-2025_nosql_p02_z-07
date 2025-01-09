@@ -166,7 +166,7 @@ class AddRecipeWindow():
             if kcal <= 100:
                 messagebox.showerror("Error", "Wartości kalori musi być większa niż 100")
             else:
-                messagebox.showerror("Error", "Czas przygotowanie nie może być mniejszy niż 1 minuta")
+                messagebox.showerror("Error", "Czas przygotowania nie może być mniejszy niż 1 minuta")
         else:
             ingredientsObjects = []
 
@@ -188,7 +188,6 @@ class AddRecipeWindow():
                 ingredientsObjects.append(ingredient)
 
             collectionName = db[mealCategory] 
-            # currentID = collectionName.count_documents({}) + 1
 
             queryID = [x for x in collectionName.find({},{"_id":1}).sort({"_id":-1}).limit(1)]
             currentID = queryID[0].get("_id") + 1
@@ -578,7 +577,7 @@ class RecipeFrame(ctk.CTkScrollableFrame):
         # Tworzenie etykiet w ramce
         for idx, text in enumerate(text_list):
             label = ctk.CTkLabel(self, text=text, wraplength=150)
-            label.grid(row=idx, column=0, padx=10, pady=5, sticky="w")
+            label.grid(row=idx, column=0, padx=20, pady=5, sticky="w") 
         
         
 

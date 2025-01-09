@@ -233,16 +233,13 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
         
        
         for i, texts in enumerate(frameTextDict.values()):
-            frame = RecipeFrame(mainFrame, text_list=texts, scrollbar_button_color="#b51b3d", scrollbar_button_hover_color="orange", border_color="#b51b3d")
+            frame = RecipeFrame(mainFrame, text_list=texts, scrollbar_button_color="#b51b3d", scrollbar_button_hover_color="orange", border_color="#b51b3d", fg_color="#3d3d3d")
             
-            frame.grid(row=0, column=i, sticky="nsew")
+            frame.grid(row=0, column=i, sticky="nsew", padx=5)
         
         for i in range(numFrames):
             mainFrame.grid_columnconfigure(i, weight=1)
 
         mainFrame.grid_rowconfigure(0, weight=1)
-
-
-
 
 
