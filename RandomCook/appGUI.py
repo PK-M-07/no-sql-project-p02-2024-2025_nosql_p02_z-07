@@ -1,7 +1,8 @@
+from tkinter import messagebox
 import customtkinter as ctk
 import tkinter as tk
 from classes import *
-from functions import *
+import random
 
 
 def createMainWindow():
@@ -64,7 +65,6 @@ def createMainWindow():
 
     mainFrame = ctk.CTkScrollableFrame(app, width=800, height=320, orientation="horizontal")
     mainFrame.place(relx=0.5, rely=0.55, anchor=tk.CENTER) 
-    # mainFrame.bind("<Button-1>", lambda event: showRecipe(app, mainFrame))
     
             # pobranie wartości z checkboxów 
     # naIleDniComoboxVal = naIleDniCombobox.get()
