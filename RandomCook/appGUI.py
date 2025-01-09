@@ -41,10 +41,10 @@ def createMainWindow():
     updateRecipeButton = ctk.CTkButton(app, text="Zaaktualizuj przepis", command=lambda: openUpdateRecipeWindow(app), corner_radius=50, fg_color="green", hover_color='#49cc49')
     updateRecipeButton.place(relx=0.2, rely=0.9, anchor=tk.CENTER)
 
-    mainLabel = ctk.CTkLabel(app,text="Nigdy więcej nie myśl co by tu dziś ugotować",height=25, width=25, font=("Helvetica", 20))
+    mainLabel = ctk.CTkLabel(app,text="Nie myśl co by tu dziś ugotować",height=25, width=25, font=("Helvetica", 20))
     mainLabel.place(relx= 0.5, rely=0.05, anchor=tk.CENTER)
 
-    textLabel = ctk.CTkLabel(app, text="wylosuj dania na cały tydzień spośród spersonalizowanej bazy przepisów", height=25, width=250, font=("Helvetica", 16))
+    textLabel = ctk.CTkLabel(app, text="wylosuj dania na cały tydzień spośród rekomendowanej bazy przepisów", height=25, width=250, font=("Helvetica", 16))
     textLabel.place(relx=0.23, rely=0.08)
 
     naIleDniLabel = ctk.CTkLabel(app, text="Na ile dni dieta", height=25, width=25, font=("Helvetica", 15))
