@@ -569,8 +569,6 @@ class DeleteOrNotWindow():
         self.deleteOrNotWindow.destroy()
 
 
-
-
 # -----------------------------------------------------------------------------------------------------------------------------------------
     # klasa tworząca frame z przepisem
 class RecipeFrame(ctk.CTkScrollableFrame):
@@ -583,8 +581,5 @@ class RecipeFrame(ctk.CTkScrollableFrame):
             label.grid(row=idx, column=0, padx=10, pady=5, sticky="w")
         
         
-
-
-    
 
 

@@ -85,6 +85,9 @@ def openUpdateRecipeWindow(app):
     newWindow = UpdateRecipeWindow(app)
 
 
+
+# ---------------- RESZTA ------------------------------
+
 def clearMainFrame(app, mainFrame):
         # funkcja do usuwania zawartości mainFrame jeśli była
     if mainFrame.winfo_children():
