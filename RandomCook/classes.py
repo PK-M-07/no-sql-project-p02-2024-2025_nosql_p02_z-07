@@ -457,17 +457,26 @@ class UpdateRecipeWindow():
 
     def mealOptionsBind(self, event):
         # funkcja która jest wywoływana po wyborze opcji z mealOptionsCombobox
-        selectedMealType = db[self.mealOptionsCombobox.get()]
+        def SearchText(self, selectedMealType):
+            # funkcja do wyszukiwania po wpisanym tekscie w self.recipeNamesCombobox
+            regex_pattern = f"^{re.escape(self.recipeNamesCombobox.get())}"
+            #print(self.recipeNamesCombobox.get())
+            self.recipeNames = [x.get("name") for x in selectedMealType.find({"name": {"$regex": regex_pattern, "$options": "i"}},{"_id":0,"name":1})]
+            self.recipeNamesCombobox.configure(values=self.recipeNames)
 
-        list = [x for x in selectedMealType.find({},{"_id":0,"name":1})]
-        self.recipeNames = [x.get("name") for x in list]
+        selectedMealType = db[self.mealOptionsCombobox.get()]
 
         self.recieNameLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Nazwa przepisu", font=("Helvetica", 14))
         self.recieNameLabel.grid(row=2, column=0, padx=10, pady=2, sticky='w')
 
-        self.recipeNamesCombobox = ctk.CTkComboBox(self.updateRecipeWindow, values=self.recipeNames, width=270, height=35, font=("Arial", 14), state="readonly")
+        self.recipeNamesCombobox = ctk.CTkComboBox(self.updateRecipeWindow, width=270, height=35, font=("Arial", 14), state="readonly") 
         self.recipeNamesCombobox.grid(row=3, column=0, padx=10, pady=2, sticky='w')
+
+        self.recipeNames = [x.get("name") for x in selectedMealType.find({},{"_id":0,"name":1})]
+       
+        self.recipeNamesCombobox.configure(state="normal", values=self.recipeNames)
         self.recipeNamesCombobox.configure(command=lambda event: self.recipeOptionsBind(event, selectedMealType))
+        self.recipeNamesCombobox.bind("<KeyRelease>", lambda event: SearchText(self, selectedMealType))
         # print(f"Wybrano posiłek: {self.recipeNames}")  # sprawdzenie wartości recipeNames
 
 
@@ -484,6 +493,8 @@ class UpdateRecipeWindow():
         self.ingredientsList = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "ingredients": 1}).get("ingredients")
 
         # print(self.ingredientsList)
+
+        self.ingredientsString = ""
 
         for i in range(len(self.ingredientsList)):
             if len(self.ingredientsList[i]) == 3:
