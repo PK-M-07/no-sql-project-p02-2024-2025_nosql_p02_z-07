@@ -275,15 +275,15 @@ class AddIngredientsWindow():
                 ingredientUnit = self.unitEntry.get()
 
                 ingredient = [ingredientName]
-                ingredientText = f"Skałdnik: {ingredientName},"
+                ingredientText = f"{ingredientName} " #Składnik: 
 
                 if ingredientQuantity: 
                     ingredient.append(int(ingredientQuantity))
-                    ingredientText += f" ilość: {ingredientQuantity}"
+                    ingredientText += f" {ingredientQuantity} " #ilość: 
 
                 if ingredientUnit:
                     ingredient.append(ingredientUnit)
-                    ingredientText += f" jednostka: {ingredientUnit}"
+                    ingredientText += f" {ingredientUnit}" #jednostka: 
 
                 self.parentWindow.ingredientsList.append(ingredient)
                 self.parentWindow.ingredientsEntry.configure(state="normal")
@@ -338,6 +338,8 @@ class UpdateRecipeWindow():
         self.updateRecipeWindow.geometry(f"{width}x{height}+{position_left}+{position_top}")
         self.updateRecipeWindow.resizable(False, False)
 
+        self.ingredientsString = ""
+        self.ingredientsList = []
         mealOptions = ["śniadania", "obiady", "kolacje", "przekąski", "desery"]
         self.recipeNames = []
 
@@ -361,7 +363,6 @@ class UpdateRecipeWindow():
         # UPDATE
     def updateRecipe(self): 
         # funkcja wkonująca update wybranej receptury
-
         selectedMealType = db[self.mealOptionsCombobox.get()]
         selectedRecipeName = self.recipeNamesCombobox.get()
         prepTime = self.prepTimeEntry.get()
@@ -433,6 +434,26 @@ class UpdateRecipeWindow():
         # opener okna do dodawania składników
         AddIngredientsWindow(self)
 
+    
+    def subtractIngredientString(self):
+        # funkcja odejmująca składnik z ingredientsString
+        if len(self.ingredientsList) > 0:
+            self.ingredientsList.pop()
+
+            content = self.ingredientsEntry.get("1.0", ctk.END) 
+            lines = content.strip().split("\n")  
+            if lines:  
+                lines.pop()  
+                updated_content = "\n".join(lines) 
+
+                if updated_content != "":
+                    updated_content += "\n"
+
+                self.ingredientsEntry.configure(state="normal")
+                self.ingredientsEntry.delete("1.0", ctk.END) 
+                self.ingredientsEntry.insert("1.0", updated_content)  
+                self.ingredientsEntry.configure(state="disabled")
+
 
     def mealOptionsBind(self, event):
         # funkcja która jest wywoływana po wyborze opcji z mealOptionsCombobox
@@ -460,20 +481,20 @@ class UpdateRecipeWindow():
         calories = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "calories": 1}).get("calories")
         isVege = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "isVege": 1}).get("isVege")
         instructions = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "instructions": 1}).get("instructions")
-        ingredientsList = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "ingredients": 1}).get("ingredients")
+        self.ingredientsList = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "ingredients": 1}).get("ingredients")
 
-        ingredients = ""
+        # print(self.ingredientsList)
 
-        for i in range(len(ingredientsList)):
-            if len(ingredientsList[i]) == 3:
-                ingredients += f'{ingredientsList[i].get("name")}  {ingredientsList[i].get("quantity")}  {ingredientsList[i].get("unit")}\n'
-            elif len(ingredientsList[i]) == 2:
-                if ingredientsList[i].get("qunatity"):
-                    ingredients += f'{ingredientsList[i].get("name")}  {ingredientsList[i].get("quantity")}\n'
+        for i in range(len(self.ingredientsList)):
+            if len(self.ingredientsList[i]) == 3:
+                self.ingredientsString += f'{self.ingredientsList[i].get("name")}  {self.ingredientsList[i].get("quantity")}  {self.ingredientsList[i].get("unit")}\n'
+            elif len(self.ingredientsList[i]) == 2:
+                if self.ingredientsList[i].get("qunatity"):
+                    self.ingredientsString += f'{self.ingredientsList[i].get("name")}  {self.ingredientsList[i].get("quantity")}\n'
                 else:
-                    ingredients += f'{ingredientsList[i].get("name")}  {ingredientsList[i].get("unit")}\n'
+                    self.ingredientsString += f'{self.ingredientsList[i].get("name")}  {self.ingredientsList[i].get("unit")}\n'
             else: 
-                ingredients += f'{ingredientsList[i].get("name")}\n'
+                self.ingredientsString += f'{self.ingredientsList[i].get("name")}\n'
 
 
         self.kcalLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Ilość kalori", font=("Helvetica", 14))
@@ -497,7 +518,7 @@ class UpdateRecipeWindow():
         self.addIngredientsButton = ctk.CTkButton(self.updateRecipeWindow, text="+", command=self.openAddIngredientsWindowForUpdate, corner_radius=100, fg_color='green', hover_color='#49cc49', width=40, font=("Helvetica", 18)) 
         self.addIngredientsButton.place(relx=0.6, rely=0.46)
 
-        self.subtractIngredientsButton = ctk.CTkButton(self.updateRecipeWindow, text="-", corner_radius=100, fg_color='#d12634', hover_color='orange', width=40, font=("Helvetica", 18)) 
+        self.subtractIngredientsButton = ctk.CTkButton(self.updateRecipeWindow, text="-", command=self.subtractIngredientString, corner_radius=100, fg_color='#d12634', hover_color='orange', width=40, font=("Helvetica", 18)) 
         self.subtractIngredientsButton.place(relx=0.75, rely=0.46)
 
         self.ingredientsEntry = ctk.CTkTextbox(self.updateRecipeWindow, width=420, height=100, state="disabled")  
@@ -525,7 +546,7 @@ class UpdateRecipeWindow():
         self.prepTimeEntry.insert(0, str(prepTime))  
         self.czyWegeCheckbox.select() if isVege else self.czyWegeCheckbox.deselect()  
         self.ingredientsEntry.configure(state="normal")
-        self.ingredientsEntry.insert("1.0", ingredients)
+        self.ingredientsEntry.insert("1.0", self.ingredientsString)
         self.ingredientsEntry.configure(state="disabled")
         self.instructionsEntry.insert("1.0", instructions)
 
