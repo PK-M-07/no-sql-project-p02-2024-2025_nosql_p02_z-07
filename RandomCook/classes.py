@@ -486,6 +486,22 @@ class UpdateRecipeWindow():
 
     def recipeOptionsBind(self, event, selectedMealType):
         # funckja oczekujaca na wartość z recipeNameComboboxa
+        if hasattr(self, 'kcalEntry') and self.kcalEntry:
+            self.kcalEntry.grid_forget()
+            self.kcalLabel.grid_forget()
+            self.prepTimeEntry.grid_forget()
+            self.prepTimeLabel.grid_forget()
+            self.czyWegeCheckbox.grid_forget()
+            self.ingredientsEntry.grid_forget()
+            self.ingredientsLabel.grid_forget()
+            self.instructionsEntry.grid_forget()
+            self.instructionsLabel.grid_forget()
+            self.helpFrame.grid_forget()
+            self.addIngredientsButton.place_forget()
+            self.subtractIngredientsButton.place_forget()
+            self.deleteButton.place_forget()
+            
+
         myImage = ctk.CTkImage(light_image=Image.open("images/trashBin.png"), size=(30, 30))
         
         selectedRecipeName = self.recipeNamesCombobox.get()
