@@ -462,6 +462,10 @@ class UpdateRecipeWindow():
             regex_pattern = f"^{re.escape(self.recipeNamesCombobox.get())}"
             #print(self.recipeNamesCombobox.get())
             self.recipeNames = [x.get("name") for x in selectedMealType.find({"name": {"$regex": regex_pattern, "$options": "i"}},{"_id":0,"name":1})]
+
+            if len(self.recipeNames) == 0:
+                self.recipeNames = ["brak"]
+            
             self.recipeNamesCombobox.configure(values=self.recipeNames)
 
         selectedMealType = db[self.mealOptionsCombobox.get()]
@@ -485,81 +489,82 @@ class UpdateRecipeWindow():
         myImage = ctk.CTkImage(light_image=Image.open("images/trashBin.png"), size=(30, 30))
         
         selectedRecipeName = self.recipeNamesCombobox.get()
-
-        prepTime = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "prep_time": 1}).get("prep_time")
-        calories = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "calories": 1}).get("calories")
-        isVege = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "isVege": 1}).get("isVege")
-        instructions = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "instructions": 1}).get("instructions")
-        self.ingredientsList = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "ingredients": 1}).get("ingredients")
-
-        # print(self.ingredientsList)
-
-        self.ingredientsString = ""
-
-        for i in range(len(self.ingredientsList)):
-            if len(self.ingredientsList[i]) == 3:
-                self.ingredientsString += f'{self.ingredientsList[i].get("name")}  {self.ingredientsList[i].get("quantity")}  {self.ingredientsList[i].get("unit")}\n'
-            elif len(self.ingredientsList[i]) == 2:
-                if self.ingredientsList[i].get("qunatity"):
-                    self.ingredientsString += f'{self.ingredientsList[i].get("name")}  {self.ingredientsList[i].get("quantity")}\n'
-                else:
-                    self.ingredientsString += f'{self.ingredientsList[i].get("name")}  {self.ingredientsList[i].get("unit")}\n'
-            else: 
-                self.ingredientsString += f'{self.ingredientsList[i].get("name")}\n'
-
-
-        self.kcalLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Ilość kalori", font=("Helvetica", 14))
-        self.kcalLabel.grid(row=4, column=0, padx=10, pady=2, sticky='w')
-
-        self.kcalEntry = CustomEntry(self.updateRecipeWindow, placeholder_text="Podaj ilość kalori dla posiłku", width=200, height=30)
-        self.kcalEntry.grid(row=5, column=0, padx=10, pady=2, sticky='w')
- 
-        self.prepTimeLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Czas przygotowania [min]", font=("Helvetica", 14))
-        self.prepTimeLabel.grid(row=6, column=0, padx=10, pady=2, sticky='w')
-
-        self.prepTimeEntry = CustomEntry(self.updateRecipeWindow, placeholder_text="Podaj czas przygotowania", width=200, height=30)
-        self.prepTimeEntry.grid(row=7, column=0, padx=10, pady=2, sticky='w')
         
-        self.czyWegeCheckbox = ctk.CTkCheckBox(self.updateRecipeWindow, text="Czy wege", width=100, height=35)  
-        self.czyWegeCheckbox.grid(row=8, column=0, padx=10, pady=5, sticky='w')
+        if selectedRecipeName != "brak":
+            prepTime = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "prep_time": 1}).get("prep_time")
+            calories = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "calories": 1}).get("calories")
+            isVege = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "isVege": 1}).get("isVege")
+            instructions = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "instructions": 1}).get("instructions")
+            self.ingredientsList = selectedMealType.find_one({"name": selectedRecipeName}, {"_id": 0, "ingredients": 1}).get("ingredients")
 
-        self.ingredientsLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Lista składników", font=("Helvetica", 14))
-        self.ingredientsLabel.grid(row=9, column=0, padx=10, pady=2, sticky='w')
+            # print(self.ingredientsList)
 
-        self.addIngredientsButton = ctk.CTkButton(self.updateRecipeWindow, text="+", command=self.openAddIngredientsWindowForUpdate, corner_radius=100, fg_color='green', hover_color='#49cc49', width=40, font=("Helvetica", 18)) 
-        self.addIngredientsButton.place(relx=0.6, rely=0.46)
+            self.ingredientsString = ""
 
-        self.subtractIngredientsButton = ctk.CTkButton(self.updateRecipeWindow, text="-", command=self.subtractIngredientString, corner_radius=100, fg_color='#d12634', hover_color='orange', width=40, font=("Helvetica", 18)) 
-        self.subtractIngredientsButton.place(relx=0.75, rely=0.46)
+            for i in range(len(self.ingredientsList)):
+                if len(self.ingredientsList[i]) == 3:
+                    self.ingredientsString += f'{self.ingredientsList[i].get("name")}  {self.ingredientsList[i].get("quantity")}  {self.ingredientsList[i].get("unit")}\n'
+                elif len(self.ingredientsList[i]) == 2:
+                    if self.ingredientsList[i].get("qunatity"):
+                        self.ingredientsString += f'{self.ingredientsList[i].get("name")}  {self.ingredientsList[i].get("quantity")}\n'
+                    else:
+                        self.ingredientsString += f'{self.ingredientsList[i].get("name")}  {self.ingredientsList[i].get("unit")}\n'
+                else: 
+                    self.ingredientsString += f'{self.ingredientsList[i].get("name")}\n'
 
-        self.ingredientsEntry = ctk.CTkTextbox(self.updateRecipeWindow, width=420, height=100, state="disabled")  
-        self.ingredientsEntry.grid(row=10, column=0, columnspan=2, padx=10, pady=2, sticky='w')
 
-        self.instructionsLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Przygotowanie", font=("Helvetica", 14))
-        self.instructionsLabel.grid(row=11, column=0, padx=10, pady=2, sticky='w')
+            self.kcalLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Ilość kalori", font=("Helvetica", 14))
+            self.kcalLabel.grid(row=4, column=0, padx=10, pady=2, sticky='w')
 
-        self.instructionsEntry = ctk.CTkTextbox(self.updateRecipeWindow, width=420, height=150)
-        self.instructionsEntry.grid(row=12, column=0, columnspan=2, padx=10, pady=2, sticky='w')
+            self.kcalEntry = CustomEntry(self.updateRecipeWindow, placeholder_text="Podaj ilość kalori dla posiłku", width=200, height=30)
+            self.kcalEntry.grid(row=5, column=0, padx=10, pady=2, sticky='w')
+    
+            self.prepTimeLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Czas przygotowania [min]", font=("Helvetica", 14))
+            self.prepTimeLabel.grid(row=6, column=0, padx=10, pady=2, sticky='w')
 
-        self.helpFrame = ctk.CTkFrame(self.updateRecipeWindow, fg_color="#242424")
-        self.helpFrame.grid(row=13, column=0, padx=10, pady=2, sticky='w')
+            self.prepTimeEntry = CustomEntry(self.updateRecipeWindow, placeholder_text="Podaj czas przygotowania", width=200, height=30)
+            self.prepTimeEntry.grid(row=7, column=0, padx=10, pady=2, sticky='w')
+            
+            self.czyWegeCheckbox = ctk.CTkCheckBox(self.updateRecipeWindow, text="Czy wege", width=100, height=35)  
+            self.czyWegeCheckbox.grid(row=8, column=0, padx=10, pady=5, sticky='w')
 
-        self.updateButton = ctk.CTkButton(self.helpFrame, text="Zmień", command=self.updateRecipe, corner_radius=50, fg_color='green', hover_color='#49cc49', width=180)
-        self.updateButton.grid(row=13, column=0, padx=20, pady=10, sticky='nsew')
+            self.ingredientsLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Lista składników", font=("Helvetica", 14))
+            self.ingredientsLabel.grid(row=9, column=0, padx=10, pady=2, sticky='w')
 
-        self.closeButton = ctk.CTkButton(self.helpFrame, text="Wyjdź", command=self.close, corner_radius=50, fg_color='#d12634', hover_color='orange', width=180)
-        self.closeButton.grid(row=13, column=1, padx=15, pady=10, sticky='nsew')
+            self.addIngredientsButton = ctk.CTkButton(self.updateRecipeWindow, text="+", command=self.openAddIngredientsWindowForUpdate, corner_radius=100, fg_color='green', hover_color='#49cc49', width=40, font=("Helvetica", 18)) 
+            self.addIngredientsButton.place(relx=0.6, rely=0.46)
 
-        self.deleteButton = ctk.CTkButton(self.updateRecipeWindow, text="", image=myImage, width=40, height=40, command=self.showDeleteConfirmWindow, corner_radius=50, fg_color='#d12634', hover_color='orange')
-        self.deleteButton.place(relx=0.75, rely=0.05)
+            self.subtractIngredientsButton = ctk.CTkButton(self.updateRecipeWindow, text="-", command=self.subtractIngredientString, corner_radius=100, fg_color='#d12634', hover_color='orange', width=40, font=("Helvetica", 18)) 
+            self.subtractIngredientsButton.place(relx=0.75, rely=0.46)
 
-        self.kcalEntry.insert(0, str(calories)) 
-        self.prepTimeEntry.insert(0, str(prepTime))  
-        self.czyWegeCheckbox.select() if isVege else self.czyWegeCheckbox.deselect()  
-        self.ingredientsEntry.configure(state="normal")
-        self.ingredientsEntry.insert("1.0", self.ingredientsString)
-        self.ingredientsEntry.configure(state="disabled")
-        self.instructionsEntry.insert("1.0", instructions)
+            self.ingredientsEntry = ctk.CTkTextbox(self.updateRecipeWindow, width=420, height=100, state="disabled")  
+            self.ingredientsEntry.grid(row=10, column=0, columnspan=2, padx=10, pady=2, sticky='w')
+
+            self.instructionsLabel = ctk.CTkLabel(self.updateRecipeWindow, text="Przygotowanie", font=("Helvetica", 14))
+            self.instructionsLabel.grid(row=11, column=0, padx=10, pady=2, sticky='w')
+
+            self.instructionsEntry = ctk.CTkTextbox(self.updateRecipeWindow, width=420, height=150)
+            self.instructionsEntry.grid(row=12, column=0, columnspan=2, padx=10, pady=2, sticky='w')
+
+            self.helpFrame = ctk.CTkFrame(self.updateRecipeWindow, fg_color="#242424")
+            self.helpFrame.grid(row=13, column=0, padx=10, pady=2, sticky='w')
+
+            self.updateButton = ctk.CTkButton(self.helpFrame, text="Zmień", command=self.updateRecipe, corner_radius=50, fg_color='green', hover_color='#49cc49', width=180)
+            self.updateButton.grid(row=13, column=0, padx=20, pady=10, sticky='nsew')
+
+            self.closeButton = ctk.CTkButton(self.helpFrame, text="Wyjdź", command=self.close, corner_radius=50, fg_color='#d12634', hover_color='orange', width=180)
+            self.closeButton.grid(row=13, column=1, padx=15, pady=10, sticky='nsew')
+
+            self.deleteButton = ctk.CTkButton(self.updateRecipeWindow, text="", image=myImage, width=40, height=40, command=self.showDeleteConfirmWindow, corner_radius=50, fg_color='#d12634', hover_color='orange')
+            self.deleteButton.place(relx=0.75, rely=0.05)
+
+            self.kcalEntry.insert(0, str(calories)) 
+            self.prepTimeEntry.insert(0, str(prepTime))  
+            self.czyWegeCheckbox.select() if isVege else self.czyWegeCheckbox.deselect()  
+            self.ingredientsEntry.configure(state="normal")
+            self.ingredientsEntry.insert("1.0", self.ingredientsString)
+            self.ingredientsEntry.configure(state="disabled")
+            self.instructionsEntry.insert("1.0", instructions)
 
 
 
