@@ -457,6 +457,7 @@ class UpdateRecipeWindow():
 
     def mealOptionsBind(self, event):
         # funkcja która jest wywoływana po wyborze opcji z mealOptionsCombobox
+
         def SearchText(self, selectedMealType):
             # funkcja do wyszukiwania po wpisanym tekscie w self.recipeNamesCombobox
             regex_pattern = f"^{re.escape(self.recipeNamesCombobox.get())}"
@@ -596,6 +597,7 @@ class DeleteOrNotWindow():
         
         width = 300
         height = 120
+
         screen_width = self.deleteOrNotWindow.winfo_screenwidth()
         screen_height = self.deleteOrNotWindow.winfo_screenheight()
         position_top = int(screen_height / 2 - height / 2) - 50
@@ -604,7 +606,7 @@ class DeleteOrNotWindow():
         self.deleteOrNotWindow.resizable(False, False)
     
         self.deleteQuestionLabel = ctk.CTkLabel(self.deleteOrNotWindow, text="Czy napewno chcesz usunąć wybrany przepis?", font=("Helvetica", 12))
-        self.deleteQuestionLabel.grid(row=0, column=0, columnspan=2, padx=20, pady=10, sticky='nsew')
+        self.deleteQuestionLabel.grid(row=0, column=0, columnspan=2, padx=20, pady=15, sticky='nsew')
 
         self.confirmDeleteButton = ctk.CTkButton(self.deleteOrNotWindow, text="Potwierdź", command=self.referenceToDeleteReciep, corner_radius=50, fg_color='green', hover_color='#49cc49')
         self.confirmDeleteButton.grid(row=1, column=0, padx=10, pady=10, sticky='nsew')

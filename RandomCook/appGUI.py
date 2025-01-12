@@ -115,7 +115,30 @@ def extractIngredientsPretty(tekst):
 
     return składniki
 
+
+def checkIDLists(ListAllID, iloscDniDiety):
+    # funkcja sprawdzająca czy jest odpowiednia ilość przepisó dla warunku isVege
+    wylosowaneID = []
+
+    try:
+        wylosowaneID = random.sample(ListAllID, k=int(iloscDniDiety))
+
+    except ValueError:
+        for i in range(int(iloscDniDiety)):
+            try:
+                wylosowaneID = random.sample(ListAllID, k=int(iloscDniDiety) - (i+1))
+                break
+            except ValueError:
+                continue
+
+        if len(wylosowaneID) < int(iloscDniDiety):
+            x = random.sample(wylosowaneID, k=int(iloscDniDiety) - len(wylosowaneID))
+            for i in range(int(iloscDniDiety) - len(wylosowaneID)):
+                wylosowaneID.append(x[i])
+
+    return wylosowaneID
    
+
 def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzekaskiChecbox, czyDeseryCheckbox):
     # funcja losująca na każdy wybrany dzień posiłki według kategorii
     iloscDniDiety = naIleDniCombobox.get()
@@ -130,24 +153,24 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
         clearMainFrame(app, mainFrame)
 
         if czyWege == True:
-            AllSnidaniaID = [x.get("_id") for x in db.śniadania.find({"isVege": bool(True)},{"_id":1}).sort({"_id":1})]
-            wylosowaneSniadaniaID = random.sample(AllSnidaniaID, k=int(iloscDniDiety))
+            AllSniadaniaID = [x.get("_id") for x in db.śniadania.find({"isVege": bool(True)},{"_id":1}).sort({"_id":1})]
+            wylosowaneSniadaniaID = checkIDLists(AllSniadaniaID, int(iloscDniDiety))
 
             AllObiadyID = [x.get("_id") for x in db.obiady.find({"isVege": bool(True)},{"_id":1}).sort({"_id":1})]
-            wylosowaneObiadyID = random.sample(AllObiadyID, k=int(iloscDniDiety))
+            wylosowaneObiadyID = checkIDLists(AllObiadyID, int(iloscDniDiety))
 
             AllKolacjeID = [x.get("_id") for x in db.kolacje.find({"isVege": bool(True)},{"_id":1}).sort({"_id":1})]
-            wylosowaneKolacjeID = random.sample(AllKolacjeID, k=int(iloscDniDiety))
+            wylosowaneKolacjeID = checkIDLists(AllKolacjeID, int(iloscDniDiety))
 
         else:
-            AllSnidaniaID = [x.get("_id") for x in db.śniadania.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
-            wylosowaneSniadaniaID = random.sample(AllSnidaniaID, k=int(iloscDniDiety))
+            AllSniadaniaID = [x.get("_id") for x in db.śniadania.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
+            wylosowaneSniadaniaID = checkIDLists(AllSniadaniaID, int(iloscDniDiety))
 
             AllObiadyID = [x.get("_id") for x in db.obiady.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
-            wylosowaneObiadyID = random.sample(AllObiadyID, k=int(iloscDniDiety))
+            wylosowaneObiadyID = checkIDLists(AllObiadyID, int(iloscDniDiety))
 
             AllKolacjeID = [x.get("_id") for x in db.kolacje.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
-            wylosowaneKolacjeID = random.sample(AllKolacjeID, k=int(iloscDniDiety))
+            wylosowaneKolacjeID = checkIDLists(AllKolacjeID, int(iloscDniDiety))
 
 
         wylosowaneSniadania = []
@@ -176,7 +199,7 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
             else:
                 AllPrzekaskiID = [x.get("_id") for x in db.przekąski.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
 
-            wylosowanePrzekaskiID = random.sample(AllPrzekaskiID, k=int(iloscDniDiety))
+            wylosowanePrzekaskiID = checkIDLists(AllPrzekaskiID, int(iloscDniDiety))
             wylosowanePrzekaski = []
 
             for i in range(int(iloscDniDiety)):
@@ -192,7 +215,7 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
             else:
                 AllDeseryID = [x.get("_id") for x in db.desery.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
             
-            wylosowaneDeseryID = random.sample(AllDeseryID, k=int(iloscDniDiety))
+            wylosowaneDeseryID = checkIDLists(AllDeseryID, int(iloscDniDiety))
             wylosowaneDesery = []
 
             for i in range(int(iloscDniDiety)):
