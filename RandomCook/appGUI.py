@@ -116,25 +116,33 @@ def extractIngredientsPretty(tekst):
     return składniki
 
 
-def checkIDLists(ListAllID, iloscDniDiety):
+def checkIDLists(ListAllID, iloscDniDiety, isVege, mealType):
     # funkcja sprawdzająca czy jest odpowiednia ilość przepisó dla warunku isVege
     wylosowaneID = []
 
-    try:
-        wylosowaneID = random.sample(ListAllID, k=int(iloscDniDiety))
+    if len(ListAllID) == 0:
+        if isVege == True:
+            messagebox.showerror("Error", f"Baza danych NIE zawiera przepisów w wersji wegetariańskiej dla {mealType}.")
+        else:
+            messagebox.showerror("Error", f"Baza danych NIE zawiera przepisów w wersji nie wegetariańskiej dla {mealType}.")
+    else: 
+        try:
+            wylosowaneID = random.sample(ListAllID, k=int(iloscDniDiety))
 
-    except ValueError:
-        for i in range(int(iloscDniDiety)):
-            try:
-                wylosowaneID = random.sample(ListAllID, k=int(iloscDniDiety) - (i+1))
-                break
-            except ValueError:
-                continue
+        except ValueError:
+            for i in range(int(iloscDniDiety)):
+                try:
+                    wylosowaneID = random.sample(ListAllID, k=int(iloscDniDiety) - (i+1))
+                    break
+                except ValueError:
+                    continue
 
-        if len(wylosowaneID) < int(iloscDniDiety):
-            x = random.sample(wylosowaneID, k=int(iloscDniDiety) - len(wylosowaneID))
-            for i in range(int(iloscDniDiety) - len(wylosowaneID)):
-                wylosowaneID.append(x[i])
+            print(wylosowaneID)
+
+            if len(wylosowaneID) < int(iloscDniDiety):
+                for i in range(int(iloscDniDiety) - len(wylosowaneID)):
+                    x = random.choice(wylosowaneID)
+                    wylosowaneID.append(x)
 
     return wylosowaneID
    
@@ -154,23 +162,23 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
 
         if czyWege == True:
             AllSniadaniaID = [x.get("_id") for x in db.śniadania.find({"isVege": bool(True)},{"_id":1}).sort({"_id":1})]
-            wylosowaneSniadaniaID = checkIDLists(AllSniadaniaID, int(iloscDniDiety))
+            wylosowaneSniadaniaID = checkIDLists(AllSniadaniaID, int(iloscDniDiety), True, "śniadania")
 
             AllObiadyID = [x.get("_id") for x in db.obiady.find({"isVege": bool(True)},{"_id":1}).sort({"_id":1})]
-            wylosowaneObiadyID = checkIDLists(AllObiadyID, int(iloscDniDiety))
+            wylosowaneObiadyID = checkIDLists(AllObiadyID, int(iloscDniDiety), True, "obiady")
 
             AllKolacjeID = [x.get("_id") for x in db.kolacje.find({"isVege": bool(True)},{"_id":1}).sort({"_id":1})]
-            wylosowaneKolacjeID = checkIDLists(AllKolacjeID, int(iloscDniDiety))
+            wylosowaneKolacjeID = checkIDLists(AllKolacjeID, int(iloscDniDiety), True, "kolacje")
 
         else:
             AllSniadaniaID = [x.get("_id") for x in db.śniadania.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
-            wylosowaneSniadaniaID = checkIDLists(AllSniadaniaID, int(iloscDniDiety))
+            wylosowaneSniadaniaID = checkIDLists(AllSniadaniaID, int(iloscDniDiety), False, "śniadania")
 
             AllObiadyID = [x.get("_id") for x in db.obiady.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
-            wylosowaneObiadyID = checkIDLists(AllObiadyID, int(iloscDniDiety))
+            wylosowaneObiadyID = checkIDLists(AllObiadyID, int(iloscDniDiety), False, "obiady")
 
             AllKolacjeID = [x.get("_id") for x in db.kolacje.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
-            wylosowaneKolacjeID = checkIDLists(AllKolacjeID, int(iloscDniDiety))
+            wylosowaneKolacjeID = checkIDLists(AllKolacjeID, int(iloscDniDiety), False, "kolacje")
 
 
         wylosowaneSniadania = []
@@ -196,10 +204,11 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
         if czyPrzekaski == True:
             if czyWege == True:
                 AllPrzekaskiID = [x.get("_id") for x in db.przekąski.find({"isVege": bool(True)},{"_id":1}).sort({"_id":1})]
+                wylosowanePrzekaskiID = checkIDLists(AllPrzekaskiID, int(iloscDniDiety), True, "przekąski")
             else:
                 AllPrzekaskiID = [x.get("_id") for x in db.przekąski.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
+                wylosowanePrzekaskiID = checkIDLists(AllPrzekaskiID, int(iloscDniDiety), False, "przekąski")
 
-            wylosowanePrzekaskiID = checkIDLists(AllPrzekaskiID, int(iloscDniDiety))
             wylosowanePrzekaski = []
 
             for i in range(int(iloscDniDiety)):
@@ -212,10 +221,11 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
         if czyDesery == True:
             if czyWege == True:
                 AllDeseryID = [x.get("_id") for x in db.desery.find({"isVege": bool(True)},{"_id":1}).sort({"_id":1})]
+                wylosowaneDeseryID = checkIDLists(AllDeseryID, int(iloscDniDiety), True, "desery")
             else:
                 AllDeseryID = [x.get("_id") for x in db.desery.find({"isVege": bool(False)},{"_id":1}).sort({"_id":1})]
-            
-            wylosowaneDeseryID = checkIDLists(AllDeseryID, int(iloscDniDiety))
+                wylosowaneDeseryID = checkIDLists(AllDeseryID, int(iloscDniDiety), False, "desery")
+
             wylosowaneDesery = []
 
             for i in range(int(iloscDniDiety)):
@@ -223,7 +233,6 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
                 przepis = f'{tekst[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekst)}\n\nWykonanie:\n{tekst[0]["instructions"]}\n\nCzas przygotowania:\n{tekst[0]["prep_time"]} minut\nIlość Kalori:\n{tekst[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekst[0]["isVege"]}\n_________________________'
 
                 wylosowaneDesery.append(przepis)
-
 
         frameTextDict = {}
 
@@ -254,7 +263,6 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
 
         numFrames = int(naIleDniCombobox.get())
         
-       
         for i, texts in enumerate(frameTextDict.values()):
             frame = RecipeFrame(mainFrame, text_list=texts, scrollbar_button_color="#b51b3d", scrollbar_button_hover_color="orange", border_color="#b51b3d", fg_color="#3d3d3d")
             
