@@ -117,7 +117,7 @@ def extractIngredientsPretty(tekst):
 
 
 def checkIDLists(ListAllID, iloscDniDiety, isVege, mealType):
-    # funkcja sprawdzająca czy jest odpowiednia ilość przepisó dla warunku isVege
+    # funkcja sprawdzająca czy jest odpowiednia ilość przepisów dla warunku isVege
     wylosowaneID = []
 
     if len(ListAllID) == 0:
@@ -188,13 +188,13 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
 
         for i in range(int(iloscDniDiety)):
             tekstS = [x for x in db.śniadania.find({"_id": wylosowaneSniadaniaID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
-            przepisS = f'{tekstS[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekstS)}\n\nWykonanie:\n{tekstS[0]["instructions"]}\n\nCzas przygotowania:\n{tekstS[0]["prep_time"]} minut\nIlość Kalori:\n{tekstS[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekstS[0]["isVege"]}\n_________________________'
-
+            przepisS = f'{tekstS[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekstS)}\n\nWykonanie:\n{tekstS[0]["instructions"]}\n\nCzas przygotowania:\n{tekstS[0]["prep_time"]} minut\nIlość Kalori:\n{tekstS[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekstS[0]["isVege"]}\n__________________'
+            
             tekstO = [x for x in db.obiady.find({"_id": wylosowaneObiadyID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
-            przepisO = f'{tekstO[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekstO)}\n\nWykonanie:\n{tekstO[0]["instructions"]}\n\nCzas przygotowania:\n{tekstO[0]["prep_time"]} minut\nIlość Kalori:\n{tekstO[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekstO[0]["isVege"]}\n_________________________'
+            przepisO = f'{tekstO[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekstO)}\n\nWykonanie:\n{tekstO[0]["instructions"]}\n\nCzas przygotowania:\n{tekstO[0]["prep_time"]} minut\nIlość Kalori:\n{tekstO[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekstO[0]["isVege"]}\n__________________'
 
             tekstK = [x for x in db.kolacje.find({"_id": wylosowaneKolacjeID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
-            przepisK = f'{tekstK[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekstK)}\n\nWykonanie:\n{tekstK[0]["instructions"]}\n\nCzas przygotowania:\n{tekstK[0]["prep_time"]} minut\nIlość Kalori:\n{tekstK[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekstK[0]["isVege"]}\n_________________________'
+            przepisK = f'{tekstK[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekstK)}\n\nWykonanie:\n{tekstK[0]["instructions"]}\n\nCzas przygotowania:\n{tekstK[0]["prep_time"]} minut\nIlość Kalori:\n{tekstK[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekstK[0]["isVege"]}\n__________________'
 
             wylosowaneSniadania.append(przepisS)
             wylosowaneObiady.append(przepisO)
@@ -213,7 +213,7 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
 
             for i in range(int(iloscDniDiety)):
                 tekst = [x for x in db.przekąski.find({"_id": wylosowanePrzekaskiID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
-                przepis = f'{tekst[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekst)}\n\nWykonanie:\n{tekst[0]["instructions"]}\n\nCzas przygotowania:\n{tekst[0]["prep_time"]} minut\nIlość Kalori:\n{tekst[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekst[0]["isVege"]}\n_________________________'
+                przepis = f'{tekst[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekst)}\n\nWykonanie:\n{tekst[0]["instructions"]}\n\nCzas przygotowania:\n{tekst[0]["prep_time"]} minut\nIlość Kalori:\n{tekst[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekst[0]["isVege"]}\n__________________'
 
                 wylosowanePrzekaski.append(przepis)
             
@@ -230,7 +230,7 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
 
             for i in range(int(iloscDniDiety)):
                 tekst = [x for x in db.desery.find({"_id": wylosowaneDeseryID[i]}, {"_id": 0, "createdAt":0, "updatedAt":0})]
-                przepis = f'{tekst[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekst)}\n\nWykonanie:\n{tekst[0]["instructions"]}\n\nCzas przygotowania:\n{tekst[0]["prep_time"]} minut\nIlość Kalori:\n{tekst[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekst[0]["isVege"]}\n_________________________'
+                przepis = f'{tekst[0]["name"]}\n\nSkładniki:\n{extractIngredientsPretty(tekst)}\n\nWykonanie:\n{tekst[0]["instructions"]}\n\nCzas przygotowania:\n{tekst[0]["prep_time"]} minut\nIlość Kalori:\n{tekst[0]["calories"]} kcal\nCzy Wegetariańskie:\n{tekst[0]["isVege"]}\n__________________'
 
                 wylosowaneDesery.append(przepis)
 

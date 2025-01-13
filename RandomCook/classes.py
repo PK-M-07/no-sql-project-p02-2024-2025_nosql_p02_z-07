@@ -638,8 +638,8 @@ class RecipeFrame(ctk.CTkScrollableFrame):
 
         # Tworzenie etykiet w ramce
         for idx, text in enumerate(text_list):
-            label = ctk.CTkLabel(self, text=text, wraplength=150)
-            label.grid(row=idx, column=0, padx=20, pady=5, sticky="w") 
+            label = ctk.CTkLabel(self, text=text, wraplength=150, font=("Helvetica", 14))
+            label.grid(row=idx, column=0, padx=25, pady=5, sticky="w") 
         
         
 
