@@ -23,7 +23,7 @@ def createMainWindow():
     position_top = int(screen_height / 2 - height / 2) - 50
     position_left = int(screen_width / 2 - width / 2)
     app.geometry(f"{width}x{height}+{position_left}+{position_top}")
-    app.resizable(False, False)
+
 
     numbers = ["1","2","3","4","5","6","7"]
 
@@ -98,6 +98,7 @@ def clearMainFrame(app, mainFrame):
 def extractIngredientsPretty(tekst):
     # funkcja do ładnego przedstawienia składników w frame w oknie głównym
     składniki = ""
+    
     for i in range(len(tekst[0]["ingredients"])):
         składniki += f'{tekst[0]["ingredients"][i]["name"]} '
 
