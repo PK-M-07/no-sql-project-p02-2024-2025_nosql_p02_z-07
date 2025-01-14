@@ -160,19 +160,21 @@ class AddRecipeWindow():
             kcal = int(kcalEntry.get())
             prepTime = int(prepTimeEntry.get())
 
-        if any(field == "" for field in [recipeName, mealCategory, kcal, prepTime, isVege, recipe]) or len(ingredientsList) < 2 or len(recipe) < 10:
+        if any(field == "" for field in [recipeName, mealCategory, kcal, prepTime, isVege, recipe]) or len(ingredientsList) < 2 or len(recipe) < 10 or len(recipeName) < 3:
             if any(field == "" for field in [recipeName, mealCategory, kcal, prepTime, isVege, recipe]):
                 messagebox.showerror("Error", "Nie poddano wszytkich wymaganych wartości - Każde pole musi być podane !")
             elif len(ingredientsList) < 2:
                 messagebox.showerror("Error", "Wymagane podanie co najminiej dwóch składników !")
+            elif len(recipeName) < 3:
+                messagebox.showerror("Error", "Nazwa receptury musi mieć co najmniej 3 znaki !")
             elif len(recipe) < 10:
                 messagebox.showerror("Error", "Wartość pola receptury jest za krótka - wymagane minimum 10 znaków !")
 
         elif kcal <= 100 or prepTime <= 1:
-            if kcal <= 100:
-                messagebox.showerror("Error", "Wartości kalori musi być większa niż 100")
+            if kcal <= 10:
+                messagebox.showerror("Error", "Wartości kalori musi być większa niż 100 !")
             else:
-                messagebox.showerror("Error", "Czas przygotowania nie może być mniejszy niż 1 minuta")
+                messagebox.showerror("Error", "Czas przygotowania nie może być mniejszy niż 1 minuta !")
         else:
             ingredientsObjects = []
 
@@ -375,49 +377,59 @@ class UpdateRecipeWindow():
         instructions = self.instructionsEntry.get("1.0", "end-1c")
         ingredients = self.ingredientsEntry.get("1.0", "end-1c")
 
-        ingredientsObjects = []
+            # obsułga właściwosci wstawiania
+        if len(instructions) < 10: 
+            messagebox.showerror("Error", "Wartość pola receptury jest za krótka - wymagane minimum 10 znaków !")
+        elif int(prepTime) < 1:
+            messagebox.showerror("Error", "Czas przygotowania nie może być mniejszy niż 1 minuta !")
+        elif int(calories) < 10:
+            messagebox.showerror("Error", "Wartości kalori musi być większa niż 100 !")
+        elif len(ingredients) == 0:
+            messagebox.showerror("Error", "Wymagane podanie co najminiej dwóch składników !")
+        else:
+            ingredientsObjects = []
 
-        for i in ingredients.splitlines():
-            dictt = {}
-            parts = i.split("  ")
-            dictt.update({"name": i.split("  ")[0]})
+            for i in ingredients.splitlines():
+                dictt = {}
+                parts = i.split("  ")
+                dictt.update({"name": i.split("  ")[0]})
 
-            if len(parts) > 1:
-                try:
-                    dictt.update({"quantity": int(parts[1])})
-                    if len(parts) > 2:
-                        dictt.update({"unit": parts[2]})
-                except ValueError:
-                    dictt.update({"unit": parts[1]})
+                if len(parts) > 1:
+                    try:
+                        dictt.update({"quantity": int(parts[1])})
+                        if len(parts) > 2:
+                            dictt.update({"unit": parts[2]})
+                    except ValueError:
+                        dictt.update({"unit": parts[1]})
 
-            ingredientsObjects.append(dictt)
-    
-        # print(ingredientsObjects)
-        # print(selectedMealType)
-        # print(selectedRecipeName)
-        # print(prepTime)
-        # print(calories)
-        # print(isVege)
-        # print(instructions)
-        # print(ingredients)
+                ingredientsObjects.append(dictt)
+        
+            # print(ingredientsObjects)
+            # print(selectedMealType)
+            # print(selectedRecipeName)
+            # print(prepTime)
+            # print(calories)
+            # print(isVege)
+            # print(instructions)
+            # print(ingredients)
 
 
-            # wykoanie update
-        selectedMealType.update_one(
-            {"name": selectedRecipeName},
-            {
-                "$set": {
-                    "ingredients": ingredientsObjects,
-                    "instructions": instructions,
-                    "prep_time": int(prepTime),
-                    "calories": int(calories),
-                    "isVege": bool(isVege),
-                    "updatedAt": datetime.now()
+                # wykoanie update
+            selectedMealType.update_one(
+                {"name": selectedRecipeName},
+                {
+                    "$set": {
+                        "ingredients": ingredientsObjects,
+                        "instructions": instructions,
+                        "prep_time": int(prepTime),
+                        "calories": int(calories),
+                        "isVege": bool(isVege),
+                        "updatedAt": datetime.now()
+                    }
                 }
-            }
-        )
+            )
 
-        self.close()
+            self.close()
 
 
     def showDeleteConfirmWindow(self):
