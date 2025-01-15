@@ -428,7 +428,6 @@ class UpdateRecipeWindow():
                     }
                 }
             )
-
             self.close()
 
 
@@ -591,6 +590,7 @@ class UpdateRecipeWindow():
             self.deleteButton = ctk.CTkButton(self.updateRecipeWindow, text="", image=myImage, width=40, height=40, command=self.showDeleteConfirmWindow, corner_radius=50, fg_color='#d12634', hover_color='orange')
             self.deleteButton.place(relx=0.75, rely=0.05)
 
+                # wprowadznie danych do odpowiednich pól
             self.kcalEntry.insert(0, str(calories)) 
             self.prepTimeEntry.insert(0, str(prepTime))  
             self.czyWegeCheckbox.select() if isVege else self.czyWegeCheckbox.deselect()  
