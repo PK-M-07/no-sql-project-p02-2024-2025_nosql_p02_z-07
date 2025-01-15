@@ -160,13 +160,13 @@ class AddRecipeWindow():
             kcal = int(kcalEntry.get())
             prepTime = int(prepTimeEntry.get())
 
-        if any(field == "" for field in [recipeName, mealCategory, kcal, prepTime, isVege, recipe]) or len(ingredientsList) < 2 or len(recipe) < 10 or len(recipeName) < 3:
+        if any(field == "" for field in [recipeName, mealCategory, kcal, prepTime, isVege, recipe]) or len(ingredientsList) < 2 or len(recipe) < 10 or len(recipeName) < 5:
             if any(field == "" for field in [recipeName, mealCategory, kcal, prepTime, isVege, recipe]):
                 messagebox.showerror("Error", "Nie poddano wszytkich wymaganych wartości - Każde pole musi być podane !")
             elif len(ingredientsList) < 2:
                 messagebox.showerror("Error", "Wymagane podanie co najminiej dwóch składników !")
-            elif len(recipeName) < 3:
-                messagebox.showerror("Error", "Nazwa receptury musi mieć co najmniej 3 znaki !")
+            elif len(recipeName) < 5:
+                messagebox.showerror("Error", "Nazwa receptury musi mieć co najmniej 5 znaków !")
             elif len(recipe) < 10:
                 messagebox.showerror("Error", "Wartość pola receptury jest za krótka - wymagane minimum 10 znaków !")
 
