@@ -4,6 +4,9 @@ import tkinter as tk
 from classes import *
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from textwrap import wrap
 import random
 import os
 
@@ -69,8 +72,6 @@ def createMainWindow():
     czyDeseryCheckbox = ctk.CTkCheckBox(app, text="Czy desery", width=100, height=35) 
     czyDeseryCheckbox.place(relx=0.8, rely=0.19)
 
-    # pobierzDieteButton = ctk.CTkButton(app, text="", height=35, width=35, image=downloadImage, command=lambda: saveRecipeToPDF(textForPDF), corner_radius=100, fg_color="#e07816", hover_color="orange") 
-
     mainFrame = ctk.CTkScrollableFrame(app, width=800, height=320, orientation="horizontal")
     mainFrame.place(relx=0.5, rely=0.55, anchor=tk.CENTER) 
 
@@ -98,11 +99,20 @@ def clearMainFrame(app, mainFrame):
 
 
 def saveRecipeToPDF(textForPDF):
-    # funkcja do zapisu wylosowanych przepisów do pliku PDF
+    # Funkcja do zapisu wylosowanych przepisów do pliku PDF
     folder = "przepisyPDFs"
+    folder1 = "font"
 
     if not os.path.exists(folder):
-        os.makedirs(folder)  
+        os.makedirs(folder)
+
+    if not os.path.exists(folder1):
+        os.makedirs(folder1)
+
+    sciezka1 = os.path.join(folder1, f"DejaVuSans.ttf")
+
+    # Rejestracja czcionki DejaVu do obsługi polskich znaków
+    pdfmetrics.registerFont(TTFont("DejaVuSans", sciezka1))
     
     pliki = [f for f in os.listdir(folder) if f.startswith("przepisy_") and f.endswith(".pdf")]
     numery = []
@@ -118,23 +128,28 @@ def saveRecipeToPDF(textForPDF):
     
     # Tworzenie pliku PDF
     c = canvas.Canvas(sciezka, pagesize=letter)
-    c.setFont("Helvetica", 12)
+    c.setFont("DejaVuSans", 12)
 
     # Parametry pozycji (wysokość, gdzie zaczynamy rysowanie)
     x = 50
-    y = 750  
+    y = 750
+    max_width = 500  
 
     lines = textForPDF.split("\n")
     
     for line in lines:
-        # Rysujemy każdą linię tekstu
-        c.drawString(x, y, line)
-        y -= 12  # Przesuwamy Y w dół o 12 punktów dla następnej linii
+        # Zawijanie tekstu na podstawie maksymalnej szerokości
+        wrapped_lines = wrap(line, width=int(max_width / 7))  # Dopasowanie szerokości (7 punktów na znak)
         
-        if y < 50:  # Sprawdzamy, czy tekst nie wychodzi poza stronę
-            c.showPage()  # Dodajemy nową stronę
-            c.setFont("Helvetica", 12)  
-            y = 750  # Resetujemy pozycję Y na nowej stronie
+        for wrapped_line in wrapped_lines:
+            c.drawString(x, y, wrapped_line)
+            y -= 15  # Przesuwamy Y w dół dla następnej linii
+            
+            if y < 50:  # Sprawdzamy, czy tekst nie wychodzi poza stronę
+                c.showPage()  # Dodajemy nową stronę
+                c.setFont("DejaVuSans", 12)  
+                y = 750  # Resetujemy pozycję Y na nowej stronie
+    
     c.save()
 
 
@@ -310,7 +325,7 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
         
         for i, texts in enumerate(frameTextDict.values()):
             frame = RecipeFrame(mainFrame, text_list=texts, scrollbar_button_color="#b51b3d", scrollbar_button_hover_color="orange", border_color="#b51b3d", fg_color="#3d3d3d")
-            textForPDF += f"\nDzień {i+1}:  "
+            textForPDF += f"\n\nDzień {i+1}:  "
             
             for text in texts:
                 textForPDF += f"{text}\n"
