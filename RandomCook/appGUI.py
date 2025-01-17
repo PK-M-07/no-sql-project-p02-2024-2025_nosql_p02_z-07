@@ -2,7 +2,10 @@ from tkinter import messagebox
 import customtkinter as ctk
 import tkinter as tk
 from classes import *
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 import random
+import os
 
 
 def createMainWindow():
@@ -26,6 +29,7 @@ def createMainWindow():
 
 
     numbers = ["1","2","3","4","5","6","7"]
+    textForPDF = ""
 
     numbersOfDays = tk.StringVar()
     isVege = tk.BooleanVar()
@@ -33,7 +37,9 @@ def createMainWindow():
 
 
                             # -------------- COMPONENTS -----------------
-    shaffleButton = ctk.CTkButton(app, text="Losuj dania", command=lambda: shuffleMealPlan(app, mainFrame, naIleDniCombobox,czyWegeCheckbox, czyPrzekaskiChecbox, czyDeseryCheckbox), corner_radius=50, fg_color='green', hover_color='#49cc49')
+    downloadImage = ctk.CTkImage(light_image=Image.open("images/downloadButton.png"), size=(25, 25))
+
+    shaffleButton = ctk.CTkButton(app, text="Losuj dania", command=lambda: shuffleMealPlan(app, mainFrame, naIleDniCombobox,czyWegeCheckbox, czyPrzekaskiChecbox, czyDeseryCheckbox, downloadImage, textForPDF), corner_radius=50, fg_color='green', hover_color='#49cc49')
     shaffleButton.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
 
     addMealButton = ctk.CTkButton(app,text="Dodaj potrawe", command=lambda: openAddRecipeWindow(app), corner_radius=50, fg_color='green', hover_color='#49cc49')
@@ -63,14 +69,10 @@ def createMainWindow():
     czyDeseryCheckbox = ctk.CTkCheckBox(app, text="Czy desery", width=100, height=35) 
     czyDeseryCheckbox.place(relx=0.8, rely=0.19)
 
+    # pobierzDieteButton = ctk.CTkButton(app, text="", height=35, width=35, image=downloadImage, command=lambda: saveRecipeToPDF(textForPDF), corner_radius=100, fg_color="#e07816", hover_color="orange") 
+
     mainFrame = ctk.CTkScrollableFrame(app, width=800, height=320, orientation="horizontal")
     mainFrame.place(relx=0.5, rely=0.55, anchor=tk.CENTER) 
-    
-            # pobranie wartości z checkboxów 
-    # naIleDniComoboxVal = naIleDniCombobox.get()
-    # vegeCheckboxVal = czyWegeCheckbox.get()
-    # deseryCheckboxVal = czyDeseryCheckbox.get()
-    # przekaskiCheckboxVal = czyPrzekaskiChecbox.get()
 
     app.mainloop()
 
@@ -89,10 +91,51 @@ def openUpdateRecipeWindow(app):
 # ---------------- RESZTA ------------------------------
 
 def clearMainFrame(app, mainFrame):
-        # funkcja do usuwania zawartości mainFrame jeśli była
+    # funkcja do usuwania zawartości mainFrame jeśli była
     if mainFrame.winfo_children():
         for widget in mainFrame.winfo_children():
             widget.destroy()
+
+
+def saveRecipeToPDF(textForPDF):
+    # funkcja do zapisu wylosowanych przepisów do pliku PDF
+    folder = "przepisyPDFs"
+
+    if not os.path.exists(folder):
+        os.makedirs(folder)  
+    
+    pliki = [f for f in os.listdir(folder) if f.startswith("przepisy_") and f.endswith(".pdf")]
+    numery = []
+    
+    for plik in pliki:
+        numer = plik.split('_')[1].split('.')[0]
+        numery.append(int(numer))
+    
+    # Jeśli są jakieś pliki, bierzemy najwyższy numer i zwiększamy o 1
+    numer_pliku = max(numery, default=0) + 1
+    
+    sciezka = os.path.join(folder, f"przepisy_{numer_pliku}.pdf")
+    
+    # Tworzenie pliku PDF
+    c = canvas.Canvas(sciezka, pagesize=letter)
+    c.setFont("Helvetica", 12)
+
+    # Parametry pozycji (wysokość, gdzie zaczynamy rysowanie)
+    x = 50
+    y = 750  
+
+    lines = textForPDF.split("\n")
+    
+    for line in lines:
+        # Rysujemy każdą linię tekstu
+        c.drawString(x, y, line)
+        y -= 12  # Przesuwamy Y w dół o 12 punktów dla następnej linii
+        
+        if y < 50:  # Sprawdzamy, czy tekst nie wychodzi poza stronę
+            c.showPage()  # Dodajemy nową stronę
+            c.setFont("Helvetica", 12)  
+            y = 750  # Resetujemy pozycję Y na nowej stronie
+    c.save()
 
 
 def extractIngredientsPretty(tekst):
@@ -148,7 +191,7 @@ def checkIDLists(ListAllID, iloscDniDiety, isVege, mealType):
     return wylosowaneID
    
 
-def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzekaskiChecbox, czyDeseryCheckbox):
+def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzekaskiChecbox, czyDeseryCheckbox, downloadImage, textForPDF):
     # funcja losująca na każdy wybrany dzień posiłki według kategorii
     iloscDniDiety = naIleDniCombobox.get()
     czyWege = bool(czyWegeCheckbox.get())
@@ -263,15 +306,25 @@ def shuffleMealPlan(app, mainFrame, naIleDniCombobox, czyWegeCheckbox, czyPrzeka
         # print(len(frameTextDict))
 
         numFrames = int(naIleDniCombobox.get())
+        textForPDF = "Rozpisana dla ciebie dieta: \n\n"
         
         for i, texts in enumerate(frameTextDict.values()):
             frame = RecipeFrame(mainFrame, text_list=texts, scrollbar_button_color="#b51b3d", scrollbar_button_hover_color="orange", border_color="#b51b3d", fg_color="#3d3d3d")
+            textForPDF += f"\nDzień {i+1}:  "
             
+            for text in texts:
+                textForPDF += f"{text}\n"
+
             frame.grid(row=0, column=i, sticky="nsew", padx=5)
         
+
         for i in range(numFrames):
             mainFrame.grid_columnconfigure(i, weight=1)
 
         mainFrame.grid_rowconfigure(0, weight=1)
+        
+        app.pobierzDieteButton = ctk.CTkButton(app, text="", height=35, width=35, image=downloadImage, command=lambda: saveRecipeToPDF(textForPDF), corner_radius=100, fg_color="#e07816", hover_color="orange") 
+        app.pobierzDieteButton.place(relx=0.95, rely= 0.9, anchor=tk.CENTER)
+
 
 
